@@ -1,0 +1,32 @@
+{
+  "name": "api-banco-malvader",
+  "version": "1.0.0",
+  "description": "API Restful para um sistema bancário (trabalho de faculdade)",
+  "main": "main.js",
+  "scripts": {
+    "start": "node dist/main.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/main.ts",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "API",
+    "restful",
+    "malvezzi",
+    "banco",
+    "machine",
+    "learning",
+    "node",
+    "poo"
+  ],
+  "author": "Vinidev-AL e MisterEight",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.5.0",
+    "express": "^5.1.0",
+    "mysql2": "^3.14.1"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.2",
+    "ts-node-dev": "^2.0.0"
+  }
+}
