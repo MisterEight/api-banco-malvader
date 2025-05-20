@@ -6,6 +6,8 @@
     "rootDir": "./src",          // pasta com código TS
     "strict": true,              // ativar checagens rigorosas
     "esModuleInterop": true,     // para importar módulos comuns
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   }
 }

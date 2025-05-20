@@ -11,6 +11,11 @@ const PORT: number = Number(process.env.API_PORT);
 const app = express();
 app.use(express.json())
 
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error(err);
+    res.status(500).json({ message: "Erro interno do servidor" });
+});
+
 // Importando as rotas
 import usuarioRoutes from './core/cliente/usuario.routes';
 app.use('/usuario', usuarioRoutes);

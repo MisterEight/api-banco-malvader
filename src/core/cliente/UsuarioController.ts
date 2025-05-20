@@ -2,41 +2,28 @@ import { Usuario } from "./Usuario";
 import { UsuarioRepositorio } from "./UsuarioRepositorio";
 import { pool } from "../../config/database"
 import { Response, Request } from "express";
+import { UsuarioService } from "./UsuarioService";
+import { Erro } from "../../utils/interfaces/respostas";
+import { CriarUsuarioDto } from "./dto/CriarUsuario.dto";
+import { validarDto } from "../../middlewares/validar-dto";
+import { plainToInstance } from "class-transformer";
 
 export class UsuarioController {
-    private usuarioRepositorio: UsuarioRepositorio;
+    private usuarioService: UsuarioService;
 
     constructor() {
-        this.usuarioRepositorio = new UsuarioRepositorio(pool);
+        const usuarioRepositorio = new UsuarioRepositorio(pool)
+        this.usuarioService = new UsuarioService(usuarioRepositorio);
     }
 
     // Controller para criar o usuarios
-    public async criarUsuario(req: Request, res: Response) {
-        try {
-            const corpo = req.body;
-            const usuario = new Usuario(corpo);
-            const novoUsuario = await this.usuarioRepositorio.criar(usuario);
-            return res.status(201).json(novoUsuario);
-        } catch (erro: any) {
-            return res.status(500).json({ erro: 'Erro interno do servidor' });
-        }
+    public async criarUsuario(criarUsuarioDto: CriarUsuarioDto) {
+        const usuario: any = await this.usuarioService.criarUsuario(criarUsuarioDto)
+        return usuario
     }
 
     // Controller para buscar o usuarios por CPF
     public async buscarUsuarioPorCpfController(req: Request, res: Response) {
-        try {
-            const { cpf } = req.params;
-            const usuario = await this.usuarioRepositorio.buscarUsuarioPorCpf(cpf);
-
-            if (!usuario || usuario.length === 0) {
-                return res.status(404).json({ mensagem: 'Usuário não encontrado' });
-            }
-
-            return res.status(200).json(usuario);
-        } catch (erro: any) {
-            console.error("Erro ao buscar por CPF:", erro.message);
-            return res.status(500).json({ erro: 'Erro interno do servidor' });
-        }
     }
 
 }

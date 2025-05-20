@@ -1,5 +1,7 @@
 import { Router } from "express";
 import { UsuarioController } from "./UsuarioController";
+import { validarDto } from "../../middlewares/validar-dto";
+import { CriarUsuarioDto } from "./dto/CriarUsuario.dto";
 
 const router = Router();
 const usuarioController = new UsuarioController();
@@ -12,14 +14,18 @@ const usuarioController = new UsuarioController();
  * ==========================================================
  */
 /** criar usuario */
-router.post("/", async (req, res, next) => {
-	try {
-		await usuarioController.criarUsuario(req, res);
-	} catch (err) {
-		next(err);
-	}
-});
-
+router.post(
+  "/",
+  validarDto(CriarUsuarioDto), // <-- middleware que valida e converte req.body
+  async (req, res, next) => {
+    try {
+      const usuario = await usuarioController.criarUsuario(req.body);
+      res.json(usuario);
+    } catch (err) {
+      next(err);
+    }
+  }
+);
 
 /** =========================================================
  *                  METODOS GET
