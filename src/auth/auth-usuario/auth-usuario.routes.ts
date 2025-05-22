@@ -14,7 +14,7 @@ const authUsuarioController = new AuthUsuarioController();
  *                  METODOS POST
  * ==========================================================
  */
-/** criar usuario */
+/** login usuario */
 router.post(
   "/",
   validarDto(LoginUsuarioDTO), 
