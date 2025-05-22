@@ -31,7 +31,7 @@ export class CriarUsuarioDto {
 
   @IsString()
   @IsOptional()
-  senha_hash?: string;
+  senha_hash!: string;
 
   @IsBoolean()
   @IsOptional()

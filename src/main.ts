@@ -21,6 +21,10 @@ import usuarioRoutes from './core/cliente/usuario.routes';
 app.use('/usuario', usuarioRoutes);
 
 
+import authUsuarioRoutes from './auth/auth-usuario/auth-usuario.routes'
+app.use('/auth/usuario', authUsuarioRoutes)
+
+
 
 inicializarBanco().then(()=> {
     app.listen(PORT, IP,  ()=> {

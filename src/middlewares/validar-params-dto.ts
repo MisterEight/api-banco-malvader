@@ -3,10 +3,10 @@ import { validate } from "class-validator";
 import { Request, Response, NextFunction } from "express";
 
 
-// Esse para validar informações que recebemos do body
-export function validarDto(tipoDto: any) {
+// Usamos esse quando queremos validar informações que vêm dos params
+export function validarParamsDto(tipoDto: any) {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const dtoConvertido = plainToInstance(tipoDto, req.body);
+    const dtoConvertido = plainToInstance(tipoDto, req.params);
     const erros = await validate(dtoConvertido as object);
 
     if (erros.length > 0) {

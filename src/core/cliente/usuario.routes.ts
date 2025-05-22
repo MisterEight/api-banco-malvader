@@ -2,6 +2,8 @@ import { Router } from "express";
 import { UsuarioController } from "./UsuarioController";
 import { validarDto } from "../../middlewares/validar-dto";
 import { CriarUsuarioDto } from "./dto/CriarUsuario.dto";
+import { BuscarUsuarioCpf } from "./dto/BuscaPorCpf.dto";
+import { validarParamsDto } from "../../middlewares/validar-params-dto";
 
 const router = Router();
 const usuarioController = new UsuarioController();
@@ -16,7 +18,7 @@ const usuarioController = new UsuarioController();
 /** criar usuario */
 router.post(
   "/",
-  validarDto(CriarUsuarioDto), // <-- middleware que valida e converte req.body
+  validarDto(CriarUsuarioDto), 
   async (req, res, next) => {
     try {
       const usuario = await usuarioController.criarUsuario(req.body);
@@ -32,9 +34,18 @@ router.post(
  * ==========================================================
  */
 /** Buscar por usuario por cpf */ 
-router.get("/cpf/:cpf", async (req, res, next) => {
+router.get(
+  "/cpf/:cpf",  
+  validarParamsDto(BuscarUsuarioCpf),  
+  async (req, res, next) => {
 	try {
-		await usuarioController.buscarUsuarioPorCpfController(req, res);
+
+      let params: BuscarUsuarioCpf = {
+        cpf: req.params.cpf
+      }
+
+     const usuario = await usuarioController.buscarUsuarioPorCpfController(params);
+    res.json(usuario)
 	} catch (err) {
 		next(err);
 	}

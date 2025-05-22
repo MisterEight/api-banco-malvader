@@ -1,6 +1,7 @@
 import { Pool, ResultSetHeader } from 'mysql2/promise';
 import { Usuario } from './Usuario';
 import { Erro } from '../../utils/interfaces/respostas';
+import { BuscarUsuarioCpf } from './dto/BuscaPorCpf.dto';
 
 export class UsuarioRepositorio {
     private pool: Pool;
@@ -55,7 +56,7 @@ export class UsuarioRepositorio {
        
     }
 
-    public async buscarUsuarioPorCpf(cpf: string): Promise<any> {
+    public async buscarUsuarioPorCpf(params: BuscarUsuarioCpf): Promise<any> {
 
         const sql = `
                 SELECT
@@ -65,9 +66,8 @@ export class UsuarioRepositorio {
                     telefone 
                 FROM usuarios WHERE cpf = ?;
             `
-
-        const [resultado] = await this.pool.query(sql, [cpf]);
-        return resultado;
+        const [resultado]: any = await this.pool.query(sql, [params.cpf]);
+        return resultado[0];
     }
 
     public async buscarUsuarioPorId(id: number): Promise<any>{
@@ -85,11 +85,14 @@ export class UsuarioRepositorio {
         return resultado;
     }
 
+
+    // Função reservada para processos internos da API, não expor no controller */
     public async verificaSeUsuarioExisteBoolean(cpf: string): Promise<boolean> {
         const sql = `
             SELECT COUNT(cpf) as total
             FROM usuarios WHERE cpf = ?;
-        `
+        `;
+
         const [resultado]: any = await this.pool.query(sql, [cpf]);
 
         // Se retornar 1, existe conta logo valor true, caso contrário false.

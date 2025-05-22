@@ -7,6 +7,7 @@ import { Erro } from "../../utils/interfaces/respostas";
 import { CriarUsuarioDto } from "./dto/CriarUsuario.dto";
 import { validarDto } from "../../middlewares/validar-dto";
 import { plainToInstance } from "class-transformer";
+import { BuscarUsuarioCpf } from "./dto/BuscaPorCpf.dto";
 
 export class UsuarioController {
     private usuarioService: UsuarioService;
@@ -18,12 +19,14 @@ export class UsuarioController {
 
     // Controller para criar o usuarios
     public async criarUsuario(criarUsuarioDto: CriarUsuarioDto) {
-        const usuario: any = await this.usuarioService.criarUsuario(criarUsuarioDto)
-        return usuario
+        const usuario: any = await this.usuarioService.criarUsuario(criarUsuarioDto);
+        return usuario;
     }
 
     // Controller para buscar o usuarios por CPF
-    public async buscarUsuarioPorCpfController(req: Request, res: Response) {
+    public async buscarUsuarioPorCpfController(params: BuscarUsuarioCpf) {
+        const usuario: any = await this.usuarioService.buscarUsuarioCpf(params);
+        return usuario;
     }
 
 }
