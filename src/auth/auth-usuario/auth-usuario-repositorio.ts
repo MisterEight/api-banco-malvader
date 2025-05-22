@@ -22,4 +22,21 @@ export class AuthUsuarioRepositorio {
             const [resultado]: any = await this.pool.query(sql, [loginUsuarioDTO.cpf]);
             return resultado[0];
         }
+
+        public async verificaOtpAtivoUsuario(loginUsuarioDTO: LoginUsuarioDTO): Promise<any> {
+            const sql = `
+               SELECT 
+                    CASE WHEN otp_ativo = 1 THEN true ELSE false END AS otpEstaAtivo
+                FROM usuarios 
+                WHERE cpf = ?;
+
+            `
+
+            const [resultado]: any = await this.pool.query(sql, [loginUsuarioDTO.cpf]);
+            return resultado[0];
+        }
+
+        public async gerarOtp(loginUsuarioDTO: LoginUsuarioDTO): Promise<any> {
+            // Parou aqui
+        }
 }

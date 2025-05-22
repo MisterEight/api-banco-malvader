@@ -2,6 +2,7 @@ import { gerarToken, verificarToken } from "../jwt/jwt";
 import { AuthUsuarioRepositorio } from "./auth-usuario-repositorio";
 import { LoginUsuarioDTO } from "./dto/LoginUsuario.dto";
 import bcrypt from 'bcrypt'
+import { VerificaOtp } from "./interfaces/auth-otp.interface";
 
 export class AuthUsuarioService {
     constructor(
@@ -20,7 +21,7 @@ export class AuthUsuarioService {
                 };
             }
 
-           const resultadoBcrypt = await bcrypt.compare(loginUsuarioDTO.senha, usuario.senha_hash)
+           const resultadoBcrypt = await bcrypt.compare(loginUsuarioDTO.senha, usuario.senha_hash);
 
            if(!resultadoBcrypt){
                   return {
@@ -30,6 +31,13 @@ export class AuthUsuarioService {
                 };
            }
 
+           const resultadoOtp = this.verificaOtpAtivo(loginUsuarioDTO);
+           
+           if((await resultadoOtp).otpEstaAtivo){
+                console.log('Achou otp ativo')
+           }
+
+           
            const payload = {
                 id: usuario.id_usuario,
                 nome: usuario.nome,
@@ -38,7 +46,7 @@ export class AuthUsuarioService {
 
            const token = gerarToken(payload)
 
-           return {token} ;
+           return {token};
         } catch (erro) {
             return {
                 erro: true,
@@ -46,5 +54,16 @@ export class AuthUsuarioService {
                 mensagem: "Ocorreu um erro inesperado!",
             };
         }
+    }
+
+
+    public async verificaOtpAtivo(loginUsuarioDTO: LoginUsuarioDTO): Promise<VerificaOtp>{
+        const resultado = await this.authUsuarioRepositorio.verificaOtpAtivoUsuario(loginUsuarioDTO)
+        return resultado
+    }
+
+    public async gerarOtp(loginUsuarioDTO: LoginUsuarioDTO): Promise<any> {
+        const resultado = await this.authUsuarioRepositorio.gerarOtp(loginUsuarioDTO)
+        return resultado
     }
 }
