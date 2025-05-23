@@ -1,5 +1,8 @@
 import { Pool, ResultSetHeader } from 'mysql2/promise';
 import { LoginUsuarioDTO } from './dto/LoginUsuario.dto';
+import { montarSQL } from '../../utils/montador-sql';
+import { InputsSQL } from '../../utils/interfaces/mysql';
+import { Usuario } from '../../core/cliente/Usuario';
 
 export class AuthUsuarioRepositorio {
     private pool: Pool;
@@ -23,6 +26,22 @@ export class AuthUsuarioRepositorio {
             return resultado[0];
         }
 
+        public async buscarUsuarioPorIdDadosOtp(id_usuario: number){
+            const sql = `
+                SELECT 
+                    id_usuario,
+                    otp_codigo,
+                    otp_expiracao,
+                    cpf,
+                    nome,
+                    tipo_usuario
+                FROM usuarios
+                WHERE id_usuario = ?
+            `
+            const [resultado]: any = await this.pool.query(sql, [id_usuario]);
+            return resultado[0];
+        }
+
         public async verificaOtpAtivoUsuario(loginUsuarioDTO: LoginUsuarioDTO): Promise<any> {
             const sql = `
                SELECT 
@@ -31,12 +50,55 @@ export class AuthUsuarioRepositorio {
                 WHERE cpf = ?;
 
             `
-
             const [resultado]: any = await this.pool.query(sql, [loginUsuarioDTO.cpf]);
             return resultado[0];
         }
 
         public async gerarOtp(loginUsuarioDTO: LoginUsuarioDTO): Promise<any> {
-            // Parou aqui
+            const conexao = await this.pool.getConnection()
+
+             try {
+            //                  INICIO TRANSAÇÃO
+            // =======================================================================================
+                await conexao.beginTransaction() 
+
+                const sql = `
+                UPDATE usuarios
+                SET 
+                    otp_codigo = ?,
+                    otp_expiracao = ?
+                WHERE cpf = ?
+                `
+                const usuario = new Usuario({})
+
+                const inputs = {
+                    codigoOtp: usuario.getOtp(),
+                    dataExpiracaoOtp: usuario.getOtpExpiracao(),
+                    cpf: loginUsuarioDTO.cpf
+                }
+
+                const [resultado]: any = await this.pool.query(sql, [inputs.codigoOtp, inputs.dataExpiracaoOtp, inputs.cpf]);
+
+                 await conexao.commit();
+
+                //             TRANSAÇÃO BEM SUCEDIDA COMMIT
+                //==========================================================================================
+
+                /** Libero a conexão após a transação ser concluida */
+                conexao.release() 
+                return resultado[0];
+
+             } catch (erro){
+                    await conexao.rollback();
+                    //  EM CASO DE ERRO - ROLLBACK
+                    // =====================================
+
+                    console.log(erro)
+                    /** Libero a conexão */
+                    conexao.release();
+                    return {erro: erro, mensagem: "Erro na operação do banco de dados."}
+             }
+
+            
         }
 }

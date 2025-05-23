@@ -8,3 +8,11 @@ export interface RetornoInsert {
   warningStatus: number;
   changedRows: number;
 }
+
+
+
+export interface InputsSQL {
+  nomeInput: string,
+  tipoInput: string,
+  valorInput: any
+}

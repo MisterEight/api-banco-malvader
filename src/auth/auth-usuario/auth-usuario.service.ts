@@ -3,6 +3,7 @@ import { AuthUsuarioRepositorio } from "./auth-usuario-repositorio";
 import { LoginUsuarioDTO } from "./dto/LoginUsuario.dto";
 import bcrypt from 'bcrypt'
 import { VerificaOtp } from "./interfaces/auth-otp.interface";
+import { ValidarOtpDados } from "./interfaces/validar-otp.interface";
 
 export class AuthUsuarioService {
     constructor(
@@ -11,6 +12,8 @@ export class AuthUsuarioService {
 
     public async fazerLogin(loginUsuarioDTO: LoginUsuarioDTO) {
         try {
+
+            let resposta;
             const usuario = await this.authUsuarioRepositorio.buscarUsuarioPorCpfLogin(loginUsuarioDTO);
 
             if (!usuario) {
@@ -21,32 +24,38 @@ export class AuthUsuarioService {
                 };
             }
 
-           const resultadoBcrypt = await bcrypt.compare(loginUsuarioDTO.senha, usuario.senha_hash);
+            const resultadoBcrypt = await bcrypt.compare(loginUsuarioDTO.senha, usuario.senha_hash);
 
-           if(!resultadoBcrypt){
-                  return {
+            if (!resultadoBcrypt) {
+                return {
                     erro: true,
                     status: 401,
                     mensagem: "Senha incorreta",
                 };
-           }
+            }
 
-           const resultadoOtp = this.verificaOtpAtivo(loginUsuarioDTO);
-           
-           if((await resultadoOtp).otpEstaAtivo){
-                console.log('Achou otp ativo')
-           }
+            const resultadoOtp = this.verificaOtpAtivo(loginUsuarioDTO);
 
-           
-           const payload = {
+            let payload = {}
+
+            payload = {
                 id: usuario.id_usuario,
                 nome: usuario.nome,
                 perfil: usuario.tipo_usuario
-           }
+            }
 
-           const token = gerarToken(payload)
+            // Se o otp estiver ativo na conta, adicionamos no token que é necessário a validação do otp
+            if ((await resultadoOtp).otpEstaAtivo) {
+                this.gerarOtp(loginUsuarioDTO)
+                Object.assign(payload, { otp_ativo: true })
+            } else {
+                Object.assign(payload, { otp_ativo: false })
+            }
 
-           return {token};
+            const token = gerarToken(payload);
+            resposta = token;
+
+            return { token: resposta };
         } catch (erro) {
             return {
                 erro: true,
@@ -56,8 +65,48 @@ export class AuthUsuarioService {
         }
     }
 
+    public async validarOtp(validarOtpDados: ValidarOtpDados) {
+        const resposta: any = await this.authUsuarioRepositorio.buscarUsuarioPorIdDadosOtp(validarOtpDados.id_usuario)
 
-    public async verificaOtpAtivo(loginUsuarioDTO: LoginUsuarioDTO): Promise<VerificaOtp>{
+        if (!resposta.otp_codigo && !resposta.otp_expiracao) {
+            return {
+                erro: true,
+                status: 500,
+                mensagem: "Ocorreu um erro inesperado ao recuperar o codigo OTP ou a expiração no banco de dados!",
+            };
+        }
+
+        if (!(validarOtpDados.otp_codigo === resposta.otp_codigo)) {
+            return {
+                erro: true,
+                status: 401,
+                mensagem: "O código informado não é igual ao enviado ao usuário!",
+            };
+        }
+
+        if (new Date() > new Date(resposta.otp_expiracao)) {
+            return {
+                erro: true,
+                status: 401,
+                mensagem: "O código expirado!",
+            };
+        }
+
+        // Se chegou até aqui é porque passou por todas as validações
+        const payload = {
+            id: resposta.id_usuario,
+            cpf: resposta.cpf,
+            nome: resposta.nome,
+            tipo_usuario: resposta.tipo_usuario
+        }
+
+
+        const token = gerarToken(payload)
+
+        return {token}
+    }
+
+    public async verificaOtpAtivo(loginUsuarioDTO: LoginUsuarioDTO): Promise<VerificaOtp> {
         const resultado = await this.authUsuarioRepositorio.verificaOtpAtivoUsuario(loginUsuarioDTO)
         return resultado
     }

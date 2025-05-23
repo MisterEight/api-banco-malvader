@@ -14,22 +14,22 @@ export class Usuario {
   private otp_codigo!: string;
 
   constructor(args: {
-    nome: string;
-    cpf: string;
-    data_nascimento: string;
+    nome?: string;
+    cpf?: string;
+    data_nascimento?: string;
     tipo_usuario?: string;
     telefone?: string;
-    senha_hash: string;
+    senha_hash?: string;
     otp_ativo?: boolean;
   }) {
-    this.nome = args.nome;
-    this.cpf = args.cpf;
-    this.data_nascimento = formatDateToMySQL(new Date(args.data_nascimento));
+    this.nome = args.nome ?? '';
+    this.cpf = args.cpf ?? '';
+    this.data_nascimento = formatDateToMySQL(new Date(args.data_nascimento ?? ''));
     this.tipo_usuario = args.tipo_usuario ?? 'comum';
     this.telefone = args.telefone ?? '';
     this.senha_hash = bcrypt.hashSync(args.senha_hash ?? '', 10);
     this.otp_ativo = args.otp_ativo ?? false;
-    this.otp_expiracao = formatDateToMySQL(new Date(Date.now() + 1 * 60 * 1000)); // 1 minuto de validade
+    this.otp_expiracao = formatDateToMySQL(new Date(Date.now() + 5 * 60 * 1000));
     this.otp_codigo = this.gerarOtp(); 
   }
 
@@ -39,5 +39,9 @@ export class Usuario {
 
   public getOtp(): string {
     return this.otp_codigo;
+  }
+
+  public getOtpExpiracao(): string{
+    return this.otp_expiracao;
   }
 }

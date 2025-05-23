@@ -4,6 +4,7 @@ import { validarDto } from "../../middlewares/validar-dto";
 import { CriarUsuarioDto } from "./dto/CriarUsuario.dto";
 import { BuscarUsuarioCpf } from "./dto/BuscaPorCpf.dto";
 import { validarParamsDto } from "../../middlewares/validar-params-dto";
+import { autenticarJWT, autenticarJWTComOTP } from "../../middlewares/validar-jwt";
 
 const router = Router();
 const usuarioController = new UsuarioController();
@@ -35,7 +36,8 @@ router.post(
  */
 /** Buscar por usuario por cpf */ 
 router.get(
-  "/cpf/:cpf",  
+  "/cpf/:cpf",
+  autenticarJWTComOTP,
   validarParamsDto(BuscarUsuarioCpf),  
   async (req, res, next) => {
 	try {

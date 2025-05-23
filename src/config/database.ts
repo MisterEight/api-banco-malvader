@@ -8,6 +8,7 @@ export const pool = mysql2.createPool({
   database: process.env.DB_DATABASE,
   password: process.env.DB_PASSWORD,
   user: process.env.DB_USER,
+  multipleStatements: true,
 })
 
 export async function inicializarBanco() {

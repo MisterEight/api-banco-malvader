@@ -1,0 +1,80 @@
+import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv'
+import { verificarToken } from '../auth/jwt/jwt';
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: any;
+    }
+  }
+}
+
+export function autenticarJWT(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+
+  let token;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+     res.status(401).json({ mensagem: 'Token não fornecido' });
+     return;
+  } else {
+   token = authHeader.split(' ')[1];
+
+  try {
+    const payload = verificarToken(token)
+
+    if(payload.erro){
+        res.status(401).json({ mensagem: payload.mensagem });
+        return; 
+    }
+
+    req.user = payload; 
+
+    console.log(req.user)
+    next();
+  } catch (erro) {
+    res.status(403).json({ mensagem: 'Token inválido ou expirado' });
+    return;
+  }
+  }
+
+
+}
+export function autenticarJWTComOTP(req: Request, res: Response, next: NextFunction) {
+  const authHeader = req.headers.authorization;
+
+  let token;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+     res.status(401).json({ mensagem: 'Token não fornecido' });
+     return;
+  } else {
+   token = authHeader.split(' ')[1];
+
+  try {
+    const payload = verificarToken(token)
+
+    if(payload.erro){
+        res.status(401).json({ mensagem: payload.mensagem });
+        return; 
+    }
+
+    if(!!payload.otp_ativo){
+        if(!payload.otp_validado){
+            res.status(401).json({ otp_valido: false, mensagem: 'É necessário realizar o validação do OTP'})
+            return
+        }
+    }
+
+    req.user = payload; 
+
+    console.log(req.user)
+    next();
+  } catch (erro) {
+    res.status(403).json({ mensagem: 'Token inválido ou expirado' });
+    return;
+  }
+  }
+
+
+}
