@@ -32,6 +32,7 @@ export class AuthUsuarioRepositorio {
                     id_usuario,
                     otp_codigo,
                     otp_expiracao,
+                    otp_utilizado,
                     cpf,
                     nome,
                     tipo_usuario
@@ -66,14 +67,16 @@ export class AuthUsuarioRepositorio {
                 UPDATE usuarios
                 SET 
                     otp_codigo = ?,
-                    otp_expiracao = ?
+                    otp_expiracao = ?,
+                    otp_utilizado = 0
                 WHERE cpf = ?
                 `
                 const usuario = new Usuario({})
+                usuario.gerarOtp()
 
                 const inputs = {
                     codigoOtp: usuario.getOtp(),
-                    dataExpiracaoOtp: usuario.getOtpExpiracao(),
+                    dataExpiracaoOtp: usuario.otp_expiracao,
                     cpf: loginUsuarioDTO.cpf
                 }
 
@@ -93,12 +96,49 @@ export class AuthUsuarioRepositorio {
                     //  EM CASO DE ERRO - ROLLBACK
                     // =====================================
 
-                    console.log(erro)
+                    //console.log(erro)
                     /** Libero a conexão */
                     conexao.release();
                     return {erro: erro, mensagem: "Erro na operação do banco de dados."}
              }
 
             
+        }
+
+        public async marcarOtpComoUtilizado(id_usuario: number): Promise<any> {
+              const conexao = await this.pool.getConnection()
+
+             try {
+            //                  INICIO TRANSAÇÃO
+            // =======================================================================================
+                await conexao.beginTransaction() 
+
+                  const sql = `
+                    UPDATE usuarios SET 
+                        otp_utilizado = 1
+                    WHERE id_usuario = ?
+                `
+
+                const [resultado]: any = await this.pool.query(sql, [id_usuario]);
+
+                 await conexao.commit();
+
+                //             TRANSAÇÃO BEM SUCEDIDA COMMIT
+                //==========================================================================================
+
+                /** Libero a conexão após a transação ser concluida */
+                conexao.release() 
+                return resultado;
+
+             } catch(erro){
+                 await conexao.rollback();
+                //  EM CASO DE ERRO - ROLLBACK
+                // =====================================
+
+                //console.log(erro)
+                    /** Libero a conexão */
+                conexao.release();
+                return {erro: erro, mensagem: "Erro na operação do banco de dados."}
+             }
         }
 }

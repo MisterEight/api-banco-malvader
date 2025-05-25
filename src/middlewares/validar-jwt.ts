@@ -16,7 +16,7 @@ export function autenticarJWT(req: Request, res: Response, next: NextFunction) {
 
   let token;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-     res.status(401).json({ mensagem: 'Token não fornecido' });
+     res.status(401).json({ mensagem: 'Permissão negada, necessário realizar o login na aplicação' });
      return;
   } else {
    token = authHeader.split(' ')[1];
@@ -31,7 +31,7 @@ export function autenticarJWT(req: Request, res: Response, next: NextFunction) {
 
     req.user = payload; 
 
-    console.log(req.user)
+    //console.log(req.user)
     next();
   } catch (erro) {
     res.status(403).json({ mensagem: 'Token inválido ou expirado' });
@@ -46,7 +46,7 @@ export function autenticarJWTComOTP(req: Request, res: Response, next: NextFunct
 
   let token;
   if (!authHeader || !authHeader.startsWith('Bearer ')) {
-     res.status(401).json({ mensagem: 'Token não fornecido' });
+     res.status(401).json({ mensagem: 'Permissão negada, necessário realizar o login na aplicação' });
      return;
   } else {
    token = authHeader.split(' ')[1];
@@ -68,7 +68,7 @@ export function autenticarJWTComOTP(req: Request, res: Response, next: NextFunct
 
     req.user = payload; 
 
-    console.log(req.user)
+    //console.log(req.user)
     next();
   } catch (erro) {
     res.status(403).json({ mensagem: 'Token inválido ou expirado' });

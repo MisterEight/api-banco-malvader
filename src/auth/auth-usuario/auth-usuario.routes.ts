@@ -23,13 +23,14 @@ router.post(
   validarDto(LoginUsuarioDTO), 
   async (req, res, next) => {
     try {
-      const usuario = await authUsuarioController.loginUsuario(req.body);
+      const resposta = await authUsuarioController.loginUsuario(req.body);
 
-        if(usuario.erro){
-         res.status(usuario.status).json({ mensagem: usuario.mensagem });
+        if(resposta.erro){
+         res.status(resposta.status).json(resposta);
+         return
         }
       
-      res.json(usuario);
+      res.json(resposta);
     } catch (err) {
       next(err);
     }
@@ -43,7 +44,7 @@ router.post(
   validarDto(ValidarDtpDTO),
   async (req , res , next) => {
     try {
-      console.log(req.user)
+      //console.log(req.user)
       const validarOtpDados: ValidarOtpDados = {
         id_usuario: req.user.id,
         otp_codigo: req.body.otp_codigo
@@ -52,6 +53,7 @@ router.post(
 
        if(token.erro){
          res.status(token.status).json({ mensagem: token.mensagem });
+         return
         }
 
 

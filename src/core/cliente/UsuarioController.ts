@@ -17,13 +17,11 @@ export class UsuarioController {
         this.usuarioService = new UsuarioService(usuarioRepositorio);
     }
 
-    // Controller para criar o usuarios
     public async criarUsuario(criarUsuarioDto: CriarUsuarioDto) {
         const usuario: any = await this.usuarioService.criarUsuario(criarUsuarioDto);
         return usuario;
     }
 
-    // Controller para buscar o usuarios por CPF
     public async buscarUsuarioPorCpfController(params: BuscarUsuarioCpf) {
         const usuario: any = await this.usuarioService.buscarUsuarioCpf(params);
         return usuario;

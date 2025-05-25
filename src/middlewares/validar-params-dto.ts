@@ -11,7 +11,7 @@ export function validarParamsDto(tipoDto: any) {
 
     if (erros.length > 0) {
       res.status(400).json({
-        mensagem: 'Erro de validação',
+        mensagem: 'Erro na validação dos parêmetros',
         erros: erros.map(erro => ({
           campo: erro.property,
           mensagens: Object.values(erro.constraints || {})

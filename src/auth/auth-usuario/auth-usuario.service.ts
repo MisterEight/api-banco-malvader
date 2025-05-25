@@ -88,21 +88,40 @@ export class AuthUsuarioService {
             return {
                 erro: true,
                 status: 401,
-                mensagem: "O código expirado!",
+                mensagem: "Código expirado!",
             };
         }
 
-        // Se chegou até aqui é porque passou por todas as validações
+        if(resposta.otp_utilizado){
+             return {
+                erro: true,
+                status: 401,
+                mensagem: "Código OTP já utilizado!",
+            };
+        }
+
+        const marcarOtpComoUsado = await this.marcarOtpComoUsado(resposta.id_usuario);
+
+        if(marcarOtpComoUsado.erro){
+              return {
+                erro: true,
+                status: 500,
+                mensagem: "Erro inesperado ao validar OTP!",
+            };
+        }
+
+        //console.log("console otp marcado", marcarOtpComoUsado)
+
+        // Se chegou até aqui é porque passou por todas as validações entãp geramos o token
         const payload = {
             id: resposta.id_usuario,
             cpf: resposta.cpf,
             nome: resposta.nome,
-            tipo_usuario: resposta.tipo_usuario
+            tipo_usuario: resposta.tipo_usuario,
+            otp_validado: true
         }
 
-
         const token = gerarToken(payload)
-
         return {token}
     }
 
@@ -113,6 +132,11 @@ export class AuthUsuarioService {
 
     public async gerarOtp(loginUsuarioDTO: LoginUsuarioDTO): Promise<any> {
         const resultado = await this.authUsuarioRepositorio.gerarOtp(loginUsuarioDTO)
+        return resultado
+    }
+
+    public async marcarOtpComoUsado(id_usuario: number){
+        const resultado = await this.authUsuarioRepositorio.marcarOtpComoUtilizado(id_usuario)
         return resultado
     }
 }

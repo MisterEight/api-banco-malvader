@@ -14,7 +14,7 @@ export const pool = mysql2.createPool({
 export async function inicializarBanco() {
   try {
     const conexao = await pool.getConnection()
-    console.log('✅ Conexão com o banco de dados estabelecida com sucesso! ✅')
+    //console.log('✅ Conexão com o banco de dados estabelecida com sucesso! ✅')
   } catch (erro: any) {
     console.error('❌ Erro ao conectar no banco:', erro.message)
   }
