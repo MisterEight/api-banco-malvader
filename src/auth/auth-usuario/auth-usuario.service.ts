@@ -34,7 +34,7 @@ export class AuthUsuarioService {
                 };
             }
 
-            const resultadoOtp = this.verificaOtpAtivo(loginUsuarioDTO);
+            const resultadoOtp = await this.verificaOtpAtivo(loginUsuarioDTO);
 
             let payload = {}
 
@@ -44,12 +44,21 @@ export class AuthUsuarioService {
                 perfil: usuario.tipo_usuario
             }
 
+
             // Se o otp estiver ativo na conta, adicionamos no token que é necessário a validação do otp
-            if ((await resultadoOtp).otpEstaAtivo) {
+            if (resultadoOtp.otpEstaAtivo) {
                 this.gerarOtp(loginUsuarioDTO)
                 Object.assign(payload, { otp_ativo: true })
             } else {
                 Object.assign(payload, { otp_ativo: false })
+            }
+
+
+            // Verificar qual o tipo de conta o usuário selecionou para definir o token que será usado nas permissões
+            if(loginUsuarioDTO.tipo === 'funcionario'){
+                Object.assign(payload, { eFuncionario: true })
+            } else if (loginUsuarioDTO.tipo === 'cliente'){
+                Object.assign(payload, { eCliente: true })
             }
 
             const token = gerarToken(payload);
@@ -118,9 +127,12 @@ export class AuthUsuarioService {
             cpf: resposta.cpf,
             nome: resposta.nome,
             tipo_usuario: resposta.tipo_usuario,
-            otp_validado: true
+            otp_ativo: true,
+            otp_validado: true,
+            eCliente: validarOtpDados.eCliente,
+            eFuncionario: validarOtpDados.eFuncionario
         }
-
+        
         const token = gerarToken(payload)
         return {token}
     }

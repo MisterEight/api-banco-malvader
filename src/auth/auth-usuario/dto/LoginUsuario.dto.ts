@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsString, IsNotEmpty, MaxLength, MinLength, IsEnum } from "class-validator";
+
+export enum TipoUsuario {
+    cliente = 'cliente',
+    funcionario = 'funcionario'
+}
+
 
 export class LoginUsuarioDTO {
     @IsString()
@@ -9,4 +15,9 @@ export class LoginUsuarioDTO {
 
     @IsString()
     senha!: string
+
+    // Cliente ou funcionário?
+    @IsNotEmpty()
+    @IsEnum(TipoUsuario, {message: ' Selecione cliente ou funcionario'})
+    tipo!: string
 }

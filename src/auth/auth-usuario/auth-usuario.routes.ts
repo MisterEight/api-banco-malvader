@@ -4,7 +4,7 @@ import { AuthUsuarioController } from "./auth-usuario.controller";
 import { LoginUsuarioDTO } from "./dto/LoginUsuario.dto";
 import { ValidarDtpDTO } from "./dto/EnviarOtp.dto";
 import { ValidarOtpDados } from "./interfaces/validar-otp.interface";
-import { autenticarJWT } from "../../middlewares/validar-jwt";
+import { autenticarJWT, autenticarJWTComOTP, rotaProtegidaParaCliente } from "../../middlewares/validar-jwt";
 
 
 const router = Router();
@@ -37,16 +37,18 @@ router.post(
   }
 );
 
-
+// validar otp
 router.post(
   '/validar-otp',
   autenticarJWT,
   validarDto(ValidarDtpDTO),
   async (req , res , next) => {
     try {
-      //console.log(req.user)
+      console.log("Informações req.user",req.user)
       const validarOtpDados: ValidarOtpDados = {
         id_usuario: req.user.id,
+        eCliente: req.user?.eCliente ? req.user?.eCliente : false,
+        eFuncionario: req.user?.eFuncionario ? req.user?.eFuncionario : false,
         otp_codigo: req.body.otp_codigo
       }
       const token = await authUsuarioController.validarOtp(validarOtpDados)
@@ -55,7 +57,6 @@ router.post(
          res.status(token.status).json({ mensagem: token.mensagem });
          return
         }
-
 
       res.json(token)
     } catch (err){

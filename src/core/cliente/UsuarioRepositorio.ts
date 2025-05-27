@@ -36,6 +36,7 @@ export class UsuarioRepositorio {
     return resultado[0];
   }
 
+  // Para uso interno
   public async buscarUsuarioPorId(id: number): Promise<any> {
     const sql = `
       SELECT id_usuario, nome, cpf, telefone 

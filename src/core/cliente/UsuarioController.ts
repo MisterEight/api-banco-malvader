@@ -17,6 +17,7 @@ export class UsuarioController {
         this.usuarioService = new UsuarioService(usuarioRepositorio);
     }
 
+    
     public async criarUsuario(criarUsuarioDto: CriarUsuarioDto) {
         const usuario: any = await this.usuarioService.criarUsuario(criarUsuarioDto);
         return usuario;

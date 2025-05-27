@@ -6,7 +6,6 @@ import { ValidarOtpDados } from "./interfaces/validar-otp.interface";
 
 
 export class AuthUsuarioController {
-
     private authUsuarioService: AuthUsuarioService;
     constructor() {
         const authUsuarioRepositorio = new AuthUsuarioRepositorio(pool)
@@ -24,7 +23,5 @@ export class AuthUsuarioController {
         const resposta: any = await this.authUsuarioService.validarOtp(validarOtpDados);
         return resposta;
     }
-
-
 }
 

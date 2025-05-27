@@ -4,7 +4,7 @@ import { validarDto } from "../../middlewares/validar-dto";
 import { CriarUsuarioDto } from "./dto/CriarUsuario.dto";
 import { BuscarUsuarioCpf } from "./dto/BuscaPorCpf.dto";
 import { validarParamsDto } from "../../middlewares/validar-params-dto";
-import { autenticarJWT, autenticarJWTComOTP } from "../../middlewares/validar-jwt";
+import { autenticarJWT, autenticarJWTComOTP, rotaProtegidaParaCliente, rotaProtegidaParaFuncionario } from "../../middlewares/validar-jwt";
 
 const router = Router();
 const usuarioController = new UsuarioController();
@@ -38,6 +38,8 @@ router.post(
 router.get(
   "/cpf/:cpf",
   autenticarJWTComOTP,
+  rotaProtegidaParaCliente,
+  rotaProtegidaParaFuncionario,
   validarParamsDto(BuscarUsuarioCpf),  
   async (req, res, next) => {
 	try {

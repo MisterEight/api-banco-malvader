@@ -24,8 +24,11 @@ app.use('/usuario', usuarioRoutes);
 import authUsuarioRoutes from './auth/auth-usuario/auth-usuario.routes'
 app.use('/auth/usuario', authUsuarioRoutes)
 
+import funcionarioRoutes from './core/funcionario/usuario.routes';
+app.use('/funcionario', funcionarioRoutes)
+
 inicializarBanco().then(()=> {
     app.listen(PORT, IP,  ()=> {
-        //console.log(`😎 API está rodando no endereço: http://${IP}:${PORT}`);
+        console.log(`😎 API está rodando no endereço: http://${IP}:${PORT}`);
     })  
 })
