@@ -24,7 +24,7 @@ app.use('/usuario', usuarioRoutes);
 import authUsuarioRoutes from './auth/auth-usuario/auth-usuario.routes'
 app.use('/auth/usuario', authUsuarioRoutes)
 
-import funcionarioRoutes from './core/funcionario/usuario.routes';
+import funcionarioRoutes from './core/funcionario/funcionario.routes';
 app.use('/funcionario', funcionarioRoutes)
 
 inicializarBanco().then(()=> {

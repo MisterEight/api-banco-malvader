@@ -16,7 +16,6 @@ export class UsuarioController {
         const usuarioRepositorio = new UsuarioRepositorio(pool)
         this.usuarioService = new UsuarioService(usuarioRepositorio);
     }
-
     
     public async criarUsuario(criarUsuarioDto: CriarUsuarioDto) {
         const usuario: any = await this.usuarioService.criarUsuario(criarUsuarioDto);

@@ -12,11 +12,17 @@ export class UsuarioRepositorio {
     try {
       await conexao.beginTransaction();
 
-      const sql = `INSERT INTO usuarios SET ?`;
-      const [resultado] = await conexao.query<ResultSetHeader>(sql, usuario.dadosTratados());
 
+      const dadosTratados = usuario.dadosTratados()
+
+      const sql = `INSERT INTO usuarios SET ? `;
+      const [resultado] = await conexao.query<ResultSetHeader>(sql, dadosTratados);
+
+      console.log(resultado)
       await conexao.commit();
       conexao.release();
+
+      resultado.insertId = await dadosTratados.id_usuario;
 
       return resultado;
 

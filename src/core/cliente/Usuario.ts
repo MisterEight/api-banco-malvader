@@ -1,7 +1,9 @@
 import * as bcrypt from 'bcrypt';
 import { randomInt } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 export class Usuario {
+  private id!: string;
   public nome: string;
   public cpf: string;
   public data_nascimento: Date;
@@ -19,6 +21,7 @@ export class Usuario {
     tipo_usuario?: string;
     telefone?: string;
   }) {
+    this.id = uuidv4()
     this.nome = args.nome ?? '';
     this.cpf = args.cpf ?? '';
     this.data_nascimento = args.data_nascimento ? new Date(args.data_nascimento) : new Date();
@@ -49,6 +52,7 @@ export class Usuario {
 
   public dadosTratados(): Record<string, any> {
     return {
+      id_usuario: this.id,
       nome: this.nome,
       cpf: this.cpf,
       data_nascimento: this.data_nascimento.toISOString().split('T')[0], 
