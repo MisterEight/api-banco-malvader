@@ -2,7 +2,7 @@ import { Pool, ResultSetHeader } from 'mysql2/promise';
 import { LoginUsuarioDTO } from './dto/LoginUsuario.dto';
 import { montarSQL } from '../../utils/montador-sql';
 import { InputsSQL } from '../../utils/interfaces/mysql';
-import { Usuario } from '../../core/cliente/Usuario';
+import { Usuario } from '../../core/usuario/Usuario';
 
 export class AuthUsuarioRepositorio {
     private pool: Pool;

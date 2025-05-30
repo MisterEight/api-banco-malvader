@@ -6,12 +6,11 @@ import { BuscarUsuarioCpf } from "./dto/BuscaPorCpf.dto";
 import { validarParamsDto } from "../../middlewares/validar-params-dto";
 import { autenticarJWT, autenticarJWTComOTP, rotaProtegidaParaCliente, rotaProtegidaParaFuncionario } from "../../middlewares/validar-jwt";
 
+
 const router = Router();
 const usuarioController = new UsuarioController();
 
 // Rotas de Usuário;
-
-
 /** =========================================================
  *                  METODOS POST
  * ==========================================================
@@ -29,6 +28,9 @@ router.post(
     }
   }
 );
+
+
+
 
 /** =========================================================
  *                  METODOS GET
@@ -54,6 +56,5 @@ router.get(
 		next(err);
 	}
 });
-
 
 export default router;
