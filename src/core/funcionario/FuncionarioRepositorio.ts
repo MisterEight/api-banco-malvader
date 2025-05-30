@@ -51,7 +51,7 @@ export class FuncionarioRepositorio {
             if(erro.code === 'ER_CHECK_CONSTRAINT_VIOLATED'){
                 return {
                     erro: true,
-                    mensagem: `Existem regras sendo violadas.`,
+                    mensagem: `Constraint violada.`,
                     codigo: 500
                 }
             }
@@ -119,5 +119,11 @@ export class FuncionarioRepositorio {
 
 
     }
-
 }
+
+
+let jfcxhwfwecedwe = 0
+
+
+
+

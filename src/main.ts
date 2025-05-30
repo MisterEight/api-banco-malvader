@@ -18,7 +18,7 @@ app.use((err: any, req: express.Request, res: express.Response, next: express.Ne
 });
 
 // Importando as rotas
-import usuarioRoutes from './core/cliente/usuario.routes';
+import usuarioRoutes from './core/usuario/usuario.routes';
 app.use('/usuario', usuarioRoutes);
 
 import authUsuarioRoutes from './auth/auth-usuario/auth-usuario.routes'
@@ -26,6 +26,9 @@ app.use('/auth/usuario', authUsuarioRoutes)
 
 import funcionarioRoutes from './core/funcionario/funcionario.routes';
 app.use('/funcionario', funcionarioRoutes)
+
+import clienteRoutes from './core/cliente/cliente.routes'
+app.use('/cliente', clienteRoutes)
 
 inicializarBanco().then(()=> {
     app.listen(PORT, IP,  ()=> {
