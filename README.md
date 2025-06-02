@@ -51,4 +51,5 @@ API_IP=localhost
 
 Rodar em desenvolvimento:
 
+# Comando
 npm run dev

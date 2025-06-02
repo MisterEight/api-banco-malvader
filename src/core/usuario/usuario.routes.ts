@@ -10,12 +10,6 @@ import { autenticarJWT, autenticarJWTComOTP, rotaProtegidaParaCliente, rotaProte
 const router = Router();
 const usuarioController = new UsuarioController();
 
-// Rotas de Usuário;
-/** =========================================================
- *                  METODOS POST
- * ==========================================================
- */
-/** criar usuario */
 router.post(
   "/",
   validarDto(CriarUsuarioDto), 
@@ -29,14 +23,6 @@ router.post(
   }
 );
 
-
-
-
-/** =========================================================
- *                  METODOS GET
- * ==========================================================
- */
-/** Buscar por usuario por cpf */ 
 router.get(
   "/cpf/:cpf",
   autenticarJWTComOTP,

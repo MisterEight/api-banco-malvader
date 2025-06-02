@@ -1,20 +1,20 @@
 import { Router } from "express";
 import { validarParamsDto } from "../../middlewares/validar-params-dto";
 import { autenticarJWT, autenticarJWTComOTP, rotaProtegidaParaCliente, rotaProtegidaParaFuncionario } from "../../middlewares/validar-jwt";
-import { ClienteController } from "./ClienteController";
 import { validarDto } from "../../middlewares/validar-dto";
-import { CriarClienteDto } from "./dto/CriarClienteDto";
+import { ContaCorrenteController } from "./ContaCorrenteController";
+import { CriarContaCorrenteDto } from "./dto/CriarContaCorrente";
 
 
 const router = Router();
-const clienteController = new ClienteController();
+const contaCorrenteController = new ContaCorrenteController();
 
 router.post(
   "/",
-  validarDto(CriarClienteDto), 
+  validarDto(CriarContaCorrenteDto), 
   async (req, res, next) => {
     try {
-      const resposta = await clienteController.criarCliente(req.body);
+      const resposta = await contaCorrenteController.criarContaCorrente(req.body);
 
       if(resposta?.erro){
         res.status(resposta.codigo ? resposta.codigo : 500).json({erro: resposta.erro, mensagem: resposta.mensagem})
