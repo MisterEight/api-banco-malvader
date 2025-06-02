@@ -43,7 +43,10 @@ import contaCorrenteRoutes from './core/conta-corrente/conta-corrente.routes';
 app.use('/conta-corrente', contaCorrenteRoutes);
 
 import contaPoupancaRoutes from './core/conta-poupanca/conta-poupanca.routes'
-app.use('/conta-poupanca', contaPoupancaRoutes)
+app.use('/conta-poupanca', contaPoupancaRoutes);
+
+import contaInvestimentoRoutes from './core/conta-investimento/conta-investimento.routes'
+app.use('/conta-investimento', contaInvestimentoRoutes)
 
 inicializarBanco().then(()=> {
     app.listen(PORT, IP,  ()=> {

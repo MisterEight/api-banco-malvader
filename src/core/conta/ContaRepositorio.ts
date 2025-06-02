@@ -32,8 +32,6 @@ export class ContaRepositorio {
             conexao.rollback();
             conexao.release();
 
-            console.log(erro)
-
             if(erro.code === 'ER_NO_REFERENCED_ROW_2'){
                 return {
                     erro: true,
