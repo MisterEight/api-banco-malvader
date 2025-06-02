@@ -30,6 +30,12 @@ app.use('/funcionario', funcionarioRoutes)
 import clienteRoutes from './core/cliente/cliente.routes'
 app.use('/cliente', clienteRoutes)
 
+import enderecoAgenciaRoutes from './core/endereco-agencia/endereco.routes'
+app.use('/endereco-agencia', enderecoAgenciaRoutes)
+
+import agenciaRoutes from './core/agencia/agencia.routes'
+app.use('/agencia', agenciaRoutes)
+
 inicializarBanco().then(()=> {
     app.listen(PORT, IP,  ()=> {
         console.log(`😎 API está rodando no endereço: http://${IP}:${PORT}`);

@@ -18,7 +18,6 @@ export class FuncionarioService {
 
         try {
             const resultado = await this.funcionarioRepositorio.inserirFuncionario(funcionario);
-
             return resultado;      
         } catch (erro){
              return {
