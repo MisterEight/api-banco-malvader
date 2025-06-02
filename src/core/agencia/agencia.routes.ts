@@ -9,12 +9,7 @@ import { CriarAgenciaDto } from "./dto/CriarAgenciaDto";
 const router = Router();
 const agenciaController = new AgenciaController();
 
-// Rotas de Cliente;
-/** =========================================================
- *                  METODOS POST
- * ==========================================================
- */
-/** criar agencia */
+
 router.post(
   "/",
   validarDto(CriarAgenciaDto), 
@@ -34,9 +29,5 @@ router.post(
 );
 
 
-/** =========================================================
- *                  METODOS GET
- * ==========================================================
- */
 
 export default router;

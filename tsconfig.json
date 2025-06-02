@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2020",          // versão do JS que será gerada
-    "module": "commonjs",        // módulo compatível com Node.js - tem a versão com require e a com import from, vamos usar a com import
+    "module": "commonjs",        // módulo compatível com Node.js
     "outDir": "./dist",          // pasta onde o JS vai ser gerado
     "rootDir": "./src",          // pasta com código TS
     "strict": true,              // ativar checagens rigorosas

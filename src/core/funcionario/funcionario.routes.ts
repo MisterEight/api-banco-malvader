@@ -7,14 +7,6 @@ import { AlterarCargoFuncionarioDto } from "./dto/AlterarCargoFuncionario.dto";
 const router = Router();
 const funcionarioController = new FuncionarioController()
 
-// Rotas de Usuário;
-
-
-/** =========================================================
- *                  METODOS POST
- * ==========================================================
- */
-/** criar usuario */
 router.post(
   "/",
   validarDto(CriarFuncionarioDto), 
