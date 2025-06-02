@@ -42,6 +42,9 @@ app.use('/conta', contaRoutes);
 import contaCorrenteRoutes from './core/conta-corrente/conta-corrente.routes';
 app.use('/conta-corrente', contaCorrenteRoutes);
 
+import contaPoupancaRoutes from './core/conta-poupanca/conta-poupanca.routes'
+app.use('/conta-poupanca', contaPoupancaRoutes)
+
 inicializarBanco().then(()=> {
     app.listen(PORT, IP,  ()=> {
         console.log(`😎 API está rodando no endereço: http://${IP}:${PORT}`);
