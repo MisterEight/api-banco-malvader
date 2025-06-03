@@ -1,4 +1,5 @@
 import { pool } from "../../config/database";
+import { ContaRepositorio } from "../conta/ContaRepositorio";
 import { ContaPoupancaRepositorio } from "./ContaPoupancaRepositorio";
 import { ContaPoupancaService } from "./ContaPoupancaService";
 import { CriarContaPoupancaDto } from "./dto/CriarContaPoupanca";
@@ -8,7 +9,8 @@ export class ContaPoupancaController {
 
     constructor(){
         const contaPoupancaRepositorio = new ContaPoupancaRepositorio(pool)
-        this.contaPoupancaService =  new ContaPoupancaService(contaPoupancaRepositorio)
+        const contaRepositorio = new ContaRepositorio(pool)
+        this.contaPoupancaService =  new ContaPoupancaService(contaPoupancaRepositorio, contaRepositorio)
     }
 
     public async criarContaPoupanca(criarContaPoupancaDto: CriarContaPoupancaDto){

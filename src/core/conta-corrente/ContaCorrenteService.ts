@@ -5,19 +5,52 @@ import { CriarContaCorrenteDto } from "./dto/CriarContaCorrente";
 
 export class ContaCorrenteService {
     constructor(
-        readonly contaCorrenteRepositorio: ContaCorrenteRepositorio
+        readonly contaCorrenteRepositorio: ContaCorrenteRepositorio,
+        readonly contaRepositorio: ContaRepositorio
     ){}
 
-    public async criarContaCorrente(criarContaCorrenteDto: CriarContaCorrenteDto){
-        const contaCorrente = new ContaCorrente(
-            criarContaCorrenteDto.id_conta,
-            criarContaCorrenteDto.limite,
-            criarContaCorrenteDto.data_vencimento,
-            criarContaCorrenteDto.taxa_manutencao
-        )
+    public async criarContaCorrente(criarContaCorrenteDto: CriarContaCorrenteDto) {
 
-        const resposta = await this.contaCorrenteRepositorio.criarContaCorrente(contaCorrente)
+        try {
 
-        return resposta;
+            const essaContaTemCadastro = await this.contaRepositorio.contaJaEstaSendoUsada(criarContaCorrenteDto.id_conta)
+
+            if (!!essaContaTemCadastro[0]?.tipo_utilizacao) {
+                if (essaContaTemCadastro[0]?.tipo_utilizacao?.toLowerCase() !== 'nenhuma') {
+                    return {
+                        erro: true,
+                        mensagem: `Não é possivel criar um conta pois ela já está associada a uma conta ${essaContaTemCadastro[0]?.tipo_utilizacao}`,
+                        codigo: 401
+                    }
+                }
+            } else {
+                return {
+                    erro: true,
+                    mensagem: `UUID de id_conta não existe`,
+                    codigo: 404
+                }
+            }
+
+
+            const contaCorrente = new ContaCorrente(
+                criarContaCorrenteDto.id_conta,
+                criarContaCorrenteDto.limite,
+                criarContaCorrenteDto.data_vencimento,
+                criarContaCorrenteDto.taxa_manutencao
+            )
+
+            const resposta = await this.contaCorrenteRepositorio.criarContaCorrente(contaCorrente)
+
+            return resposta;
+
+        } catch (erro) {
+            return {
+                erro: true,
+                mensagem: `Erro ao criar conta corrente, erro inesperado`,
+                codigo: 500
+            }
+        }
+
+
     }
 }

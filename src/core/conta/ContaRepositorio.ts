@@ -45,4 +45,29 @@ export class ContaRepositorio {
             }
         }
     }
+
+    // Essa função será utilizado nos modulos de CC, CP e CI - pode haver outras utilizações.
+    public async contaJaEstaSendoUsada(uuid: string): Promise<any> {
+        const sql = `
+            SELECT c.id_conta, 
+            CASE 
+                WHEN cc.id_conta IS NOT NULL THEN 'Conta Corrente'
+                WHEN p.id_conta IS NOT NULL THEN 'Poupança'
+                WHEN ci.id_conta IS NOT NULL THEN 'Investimento'
+                ELSE 'Nenhuma'
+            END AS tipo_utilizacao
+            FROM conta c
+                LEFT JOIN contas_corrente cc ON cc.id_conta = c.id_conta
+                LEFT JOIN contas_poupanca p ON p.id_conta = c.id_conta
+                LEFT JOIN contas_investimento ci ON ci.id_conta = c.id_conta
+            WHERE c.id_conta = ?;
+        `
+
+        try {
+            const [resposta]: any = await this.pool.query<ResultSetHeader>(sql, [uuid]);
+            return resposta;
+        } catch (erro: any){
+            throw new Error(`Erro ao consultar disponibilidade da conta`)
+        }
+    }
 }
