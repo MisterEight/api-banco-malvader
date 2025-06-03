@@ -1,5 +1,6 @@
 import { Pool, ResultSetHeader } from "mysql2/promise";
 import { Agencia } from "./Agencia";
+import { tratarCodigosDeErroSql } from "../../utils/tratamentoDeErrosSql";
 
 export class AgenciaRepositorio {
     constructor(
@@ -30,29 +31,9 @@ export class AgenciaRepositorio {
             conexao.rollback()
             conexao.release()
 
-             if(erro.code === 'ER_NO_REFERENCED_ROW_2'){
-                return {
-                    erro: true,
-                    mensagem: `A chave estrangeira de usuario não existe.`,
-                    codigo: 500
-                }
-            }
-
-            if(erro.code === 'ER_DUP_ENTRY'){
-                return {
-                    erro: true,
-                    mensagem: `Existem identificadores únicos que estão sendo duplicados.`,
-                    codigo: 500
-                }
-            }
-
-            if(erro.code === 'ER_CHECK_CONSTRAINT_VIOLATED'){
-                return {
-                    erro: true,
-                    mensagem: `Constraint violada.`,
-                    codigo: 500
-                }
-            }
+            if (tratarCodigosDeErroSql(erro)) {
+                return tratarCodigosDeErroSql(erro)
+            } 
 
             return  {
                 erro: true,

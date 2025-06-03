@@ -2,6 +2,7 @@ import { Pool, ResultSetHeader } from 'mysql2/promise';
 import { Usuario } from './Usuario';
 import { Erro } from '../../utils/interfaces/respostas';
 import { BuscarUsuarioCpf } from './dto/BuscaPorCpf.dto';
+import { tratarCodigosDeErroSql } from '../../utils/tratamentoDeErrosSql';
 
 export class UsuarioRepositorio {
   constructor(private readonly pool: Pool) {}
@@ -29,6 +30,12 @@ export class UsuarioRepositorio {
     } catch (erro) {
       await conexao.rollback();
       conexao.release();
+
+      const erroTratado = tratarCodigosDeErroSql(erro);
+      if (erroTratado !== false) {
+        return erroTratado;
+      }
+
       return { erro, mensagem: "Erro na operação do banco de dados." };
     }
   }

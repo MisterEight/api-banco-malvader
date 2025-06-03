@@ -1,5 +1,6 @@
 import { Pool, ResultSetHeader } from "mysql2/promise";
 import { ContaInvestimento } from "./ContaInvestimento";
+import { tratarCodigosDeErroSql } from "../../utils/tratamentoDeErrosSql";
 
 export class ContaInvestimentoRepositorio {
     constructor(readonly pool: Pool){}
@@ -36,32 +37,10 @@ export class ContaInvestimentoRepositorio {
             conexao.rollback()
             conexao.release()
 
-            console.log(erro)
-
-            if(erro.code === 'ER_NO_REFERENCED_ROW_2'){
-                return {
-                    erro: true,
-                    mensagem: `A chave estrangeira de usuario não existe.`,
-                    codigo: 500
-                }
+            const erroTratado = tratarCodigosDeErroSql(erro);
+            if (erroTratado !== false) {
+                return erroTratado;
             }
-
-            if(erro.code === 'ER_DUP_ENTRY'){
-                return {
-                    erro: true,
-                    mensagem: `Existem identificadores únicos que estão sendo duplicados.`,
-                    codigo: 500
-                }
-            }
-
-            if(erro.code === 'ER_CHECK_CONSTRAINT_VIOLATED'){
-                return {
-                    erro: true,
-                    mensagem: `Constraint violada.`,
-                    codigo: 500
-                }
-            }
-
             return {
                 erro: true,
                 mensagem: "Erro ao criar conta investimento",
@@ -73,12 +52,3 @@ export class ContaInvestimentoRepositorio {
     }
 }
 
-
-// CREATE TABLE contas_investimento (
-//   id_conta_investimento CHAR(36) PRIMARY KEY,
-//   id_conta CHAR(36) NOT NULL UNIQUE,
-//   perfil_risco ENUM('CONSERVADOR', 'MODERADO', 'ARROJADO') NOT NULL,
-//   valor_minimo FLOAT NOT NULL,
-//   taxa_rendimento_base FLOAT NOT NULL,
-//   FOREIGN KEY (id_conta) REFERENCES conta(id_conta)
-// );
