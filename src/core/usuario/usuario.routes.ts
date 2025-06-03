@@ -15,8 +15,12 @@ router.post(
   validarDto(CriarUsuarioDto), 
   async (req, res, next) => {
     try {
-      const usuario = await usuarioController.criarUsuario(req.body);
-      res.json(usuario);
+      const resposta = await usuarioController.criarUsuario(req.body);
+        if(resposta?.erro){
+        res.status(resposta.codigo ? resposta.codigo : 500).json({erro: resposta.erro, mensagem: resposta.mensagem})
+        return;
+      }
+      res.json(resposta);
     } catch (err) {
       next(err);
     }

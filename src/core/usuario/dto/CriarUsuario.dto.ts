@@ -4,7 +4,8 @@ import {
   IsOptional,
   IsBoolean,
   IsDateString,
-  Length
+  Length,
+  IsEmail
 } from 'class-validator';
 
 export class CriarUsuarioDto {
@@ -16,6 +17,9 @@ export class CriarUsuarioDto {
   @IsNotEmpty()
   @Length(11, 11, { message: 'CPF deve ter exatamente 11 dígitos' })
   cpf!: string;
+
+  @IsEmail()
+  email!: string
 
   @IsDateString({}, { message: 'data_nascimento deve ser uma data válida (YYYY-MM-DD)' })
   @IsNotEmpty()
