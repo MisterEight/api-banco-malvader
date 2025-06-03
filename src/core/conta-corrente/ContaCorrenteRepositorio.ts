@@ -1,6 +1,7 @@
 import { Pool, ResultSetHeader } from "mysql2/promise";
 import { CriarContaCorrenteDto } from "./dto/CriarContaCorrente";
 import { ContaCorrente } from "./ContaCorrente";
+import { tratarCodigosDeErroSql } from "../../utils/tratamentoDeErrosSql";
 
 export class ContaCorrenteRepositorio {
     constructor(readonly pool: Pool){}
@@ -38,28 +39,9 @@ export class ContaCorrenteRepositorio {
             conexao.rollback()
             conexao.release()
 
-            if(erro.code === 'ER_NO_REFERENCED_ROW_2'){
-                return {
-                    erro: true,
-                    mensagem: `Algo errado com a chave estrangeira.`,
-                    codigo: 500
-                }
-            }
-
-            if(erro.code === 'ER_DUP_ENTRY'){
-                return {
-                    erro: true,
-                    mensagem: `Existem identificadores únicos que estão sendo duplicados.`,
-                    codigo: 500
-                }
-            }
-
-            if(erro.code === 'ER_CHECK_CONSTRAINT_VIOLATED'){
-                return {
-                    erro: true,
-                    mensagem: `Constraint violada.`,
-                    codigo: 500
-                }
+            const erroTratado = tratarCodigosDeErroSql(erro);
+            if (erroTratado !== false) {
+                return erroTratado;
             }
 
             return {

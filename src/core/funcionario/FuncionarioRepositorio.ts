@@ -1,6 +1,7 @@
 import { Pool, ResultSetHeader } from "mysql2/promise";
 import { Funcionario } from "./Funcionario";
 import { AlterarCargoFuncionarioDto } from "./dto/AlterarCargoFuncionario.dto";
+import { tratarCodigosDeErroSql } from "../../utils/tratamentoDeErrosSql";
 
 export class FuncionarioRepositorio {
     constructor(private readonly pool: Pool){}
@@ -32,28 +33,9 @@ export class FuncionarioRepositorio {
             await conexao.rollback();
             conexao.release();
 
-            if(erro.code === 'ER_NO_REFERENCED_ROW_2'){
-                return {
-                    erro: true,
-                    mensagem: `A chave estrangeira de usuario não existe.`,
-                    codigo: 500
-                }
-            }
-
-            if(erro.code === 'ER_DUP_ENTRY'){
-                return {
-                    erro: true,
-                    mensagem: `Existem identificadores únicos que estão sendo duplicados.`,
-                    codigo: 500
-                }
-            }
-
-            if(erro.code === 'ER_CHECK_CONSTRAINT_VIOLATED'){
-                return {
-                    erro: true,
-                    mensagem: `Constraint violada.`,
-                    codigo: 500
-                }
+            const erroTratado = tratarCodigosDeErroSql(erro);
+            if (erroTratado !== false) {
+                return erroTratado;
             }
        
             return {
