@@ -17,6 +17,7 @@ export class AuthUsuarioRepositorio {
                     SELECT
                         id_usuario,
                         nome,
+                        email,
                         cpf,
                         senha_hash,
                         tipo_usuario
@@ -89,7 +90,7 @@ export class AuthUsuarioRepositorio {
 
                 /** Libero a conexão após a transação ser concluida */
                 conexao.release() 
-                return resultado[0];
+                return {otp: usuario.getOtp()};
 
              } catch (erro){
                     await conexao.rollback();

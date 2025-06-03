@@ -4,6 +4,7 @@ import { LoginUsuarioDTO } from "./dto/LoginUsuario.dto";
 import bcrypt from 'bcrypt'
 import { VerificaOtp } from "./interfaces/auth-otp.interface";
 import { ValidarOtpDados } from "./interfaces/validar-otp.interface";
+import { enviarOtpEmail } from "../../utils/emails/enviarOtp";
 
 export class AuthUsuarioService {
     constructor(
@@ -47,7 +48,8 @@ export class AuthUsuarioService {
 
             // Se o otp estiver ativo na conta, adicionamos no token que é necessário a validação do otp
             if (resultadoOtp.otpEstaAtivo) {
-                this.gerarOtp(loginUsuarioDTO)
+                const otp: any = await this.gerarOtp(loginUsuarioDTO)
+                enviarOtpEmail(usuario.email, otp.otp)
                 Object.assign(payload, { otp_ativo: true })
             } else {
                 Object.assign(payload, { otp_ativo: false })
