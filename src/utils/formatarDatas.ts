@@ -8,3 +8,5 @@ export function formatDateToMySQL(date: Date): string {
   return `${yyyy}-${mm}-${dd} ${hh}:${mi}:${ss}`;
 }
 
+
+
