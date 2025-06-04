@@ -32,6 +32,7 @@ export async function enviarOtpEmail(destinatario: string, codigoOtp: string) {
     </div>
   </div>`;
 
+
   await transporter.sendMail({
     from: `"Banco Malvader" <${process.env.EMAIL_USER}>`,
     to: destinatario,

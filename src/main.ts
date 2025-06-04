@@ -48,6 +48,9 @@ app.use('/conta-poupanca', contaPoupancaRoutes);
 import contaInvestimentoRoutes from './core/conta-investimento/conta-investimento.routes'
 app.use('/conta-investimento', contaInvestimentoRoutes)
 
+import transacaoRoutes from './core/transacao/transacao.routes';
+app.use('/transacao', transacaoRoutes)
+
 inicializarBanco().then(()=> {
     app.listen(PORT, IP,  ()=> {
         console.log(`😎 API está rodando no endereço: http://${IP}:${PORT}`);
