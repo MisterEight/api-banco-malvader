@@ -5,7 +5,9 @@ import {
   IsBoolean,
   IsDateString,
   Length,
-  IsEmail
+  IsEmail,
+  isEnum,
+  IsEnum
 } from 'class-validator';
 
 export class CriarUsuarioDto {

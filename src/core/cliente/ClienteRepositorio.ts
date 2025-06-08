@@ -23,7 +23,7 @@ export class ClienteRepositorio {
         try {
             conexao.beginTransaction()
 
-            const [resultado] = await this.pool.query<ResultSetHeader>(sql, [
+            const [resultado] = await conexao.query<ResultSetHeader>(sql, [
                 cliente.getIdCliente(), 
                 cliente.getIdUsuario(), 
                 cliente.getScore()

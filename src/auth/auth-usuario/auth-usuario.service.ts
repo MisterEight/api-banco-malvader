@@ -46,6 +46,37 @@ export class AuthUsuarioService {
             }
 
 
+            // Verificar qual o tipo de conta o usuário selecionou para definir o token que será usado nas permissões
+            if (loginUsuarioDTO.tipo === 'funcionario') {
+
+                const usuarioExisteEmFuncionarios = await this.authUsuarioRepositorio.usuarioExisteEmFuncionarios(usuario.id_usuario)
+
+            
+                if (usuarioExisteEmFuncionarios.eFuncionario == 0) {
+                    return {
+                        erro: true,
+                        mensagem: `Esse usuário não possui conta de funcionário`,
+                        status: 403
+                    }
+                }
+              
+                Object.assign(payload, { eFuncionario: true })
+            } else if (loginUsuarioDTO.tipo === 'cliente') {
+
+                const usuarioExisteEmClientes = await this.authUsuarioRepositorio.usuarioExisteEmClientes(usuario.id_usuario)
+
+
+                if (usuarioExisteEmClientes.eCliente == 0) {
+                    return {
+                        erro: true,
+                        mensagem: `Esse usuário não possui conta de cliente`,
+                        status: 403
+                    }
+                }
+
+                Object.assign(payload, { eCliente: true })
+            }
+
             // Se o otp estiver ativo na conta, adicionamos no token que é necessário a validação do otp
             if (resultadoOtp.otpEstaAtivo) {
                 const otp: any = await this.gerarOtp(loginUsuarioDTO)
@@ -56,18 +87,12 @@ export class AuthUsuarioService {
             }
 
 
-            // Verificar qual o tipo de conta o usuário selecionou para definir o token que será usado nas permissões
-            if(loginUsuarioDTO.tipo === 'funcionario'){
-                Object.assign(payload, { eFuncionario: true })
-            } else if (loginUsuarioDTO.tipo === 'cliente'){
-                Object.assign(payload, { eCliente: true })
-            }
-
             const token = gerarToken(payload);
             resposta = token;
 
             return { token: resposta };
         } catch (erro) {
+            console.log(erro)
             return {
                 erro: true,
                 status: 500,

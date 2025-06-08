@@ -142,4 +142,40 @@ export class AuthUsuarioRepositorio {
                 return {erro: erro, mensagem: "Erro na operação do banco de dados."}
              }
         }
+
+        public async usuarioExisteEmFuncionarios(id_usuario: string): Promise<any> {
+            try {
+                const sql = `
+                    SELECT CASE WHEN COUNT(fuc.id_funcionario) > 0 THEN true ELSE false END as eFuncionario
+                    FROM usuarios as us
+                    LEFT OUTER JOIN funcionarios as fuc
+                    ON us.id_usuario = fuc.id_usuario
+                    WHERE us.id_usuario = ?;
+                `
+                const [resultado]: any = await this.pool.query(sql, [id_usuario]);
+
+                return resultado[0];
+
+            } catch(erro: any){
+                throw new Error("Erro ao consultar se usuário existe em funcionarios")
+            }
+        }
+
+        public async usuarioExisteEmClientes(id_usuario: string): Promise<any> {
+            try {
+                const sql = `
+                    SELECT CASE WHEN COUNT(cli.id_cliente) > 0 THEN true ELSE false END as eCliente
+                    FROM usuarios as us
+                    LEFT OUTER JOIN clientes as cli
+                    ON us.id_usuario = cli.id_usuario
+                    WHERE us.id_usuario = ?;
+                `
+                const [resultado]: any = await this.pool.query(sql, [id_usuario]);
+
+                return resultado;
+
+            } catch(erro: any){
+                throw new Error("Erro ao consultar se usuario existe em clientes")
+            }
+        }
 }
