@@ -8,13 +8,17 @@ import { CriarUsuarioDto } from "./dto/CriarUsuario.dto";
 import { validarDto } from "../../middlewares/validar-dto";
 import { plainToInstance } from "class-transformer";
 import { BuscarUsuarioCpf } from "./dto/BuscaPorCpf.dto";
+import { FuncionarioRepositorio } from "../funcionario/FuncionarioRepositorio";
+import { ClienteRepositorio } from "../cliente/ClienteRepositorio";
 
 export class UsuarioController {
     private usuarioService: UsuarioService;
 
     constructor() {
-        const usuarioRepositorio = new UsuarioRepositorio(pool)
-        this.usuarioService = new UsuarioService(usuarioRepositorio);
+        const usuarioRepositorio = new UsuarioRepositorio(pool);
+        const funcionarioRepositorio = new FuncionarioRepositorio(pool);
+        const clienteRepositorio = new ClienteRepositorio(pool)
+        this.usuarioService = new UsuarioService(usuarioRepositorio, funcionarioRepositorio, clienteRepositorio);
     }
     
     public async criarUsuario(criarUsuarioDto: CriarUsuarioDto) {

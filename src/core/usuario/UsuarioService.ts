@@ -3,11 +3,24 @@ import { UsuarioRepositorio } from "./UsuarioRepositorio";
 import { Erro } from "../../utils/interfaces/respostas";
 import { CriarUsuarioDto } from "./dto/CriarUsuario.dto";
 import { BuscarUsuarioCpf } from "./dto/BuscaPorCpf.dto";
+import { FuncionarioRepositorio } from "../funcionario/FuncionarioRepositorio";
+import { ClienteRepositorio } from "../cliente/ClienteRepositorio";
+import { FuncionarioService } from "../funcionario/FuncionarioService";
+import { ClienteService } from "../cliente/ClienteService";
+import { CriarFuncionarioDto } from "../funcionario/dto/CriarFuncionario.dto";
+import { CriarClienteDto } from "../cliente/dto/CriarClienteDto";
 
 export class UsuarioService {
+  private funcionarioService: FuncionarioService;
+  private clienteService: ClienteService;
   constructor(
-    private readonly usuarioRepositorio: UsuarioRepositorio
-  ) {}
+    private readonly usuarioRepositorio: UsuarioRepositorio,
+    private readonly funcionarioRepositorio: FuncionarioRepositorio,
+    private readonly clienteRepositorio: ClienteRepositorio
+  ) {
+    this.funcionarioService = new FuncionarioService(this.funcionarioRepositorio)
+    this.clienteService = new ClienteService(this.clienteRepositorio)
+  }
 
   public async criarUsuario(usuarioDto: CriarUsuarioDto): Promise<any | Erro> {
     try {
@@ -25,6 +38,20 @@ export class UsuarioService {
       usuario.gerarOtp();
 
       const retornoInsert = await this.usuarioRepositorio.criar(usuario);
+
+      // Crio uma conta de funcionario se for do tipo o administrador
+      if(usuarioDto.tipo_usuario == 'administrador'){
+        const criarFuncionarioDto: CriarFuncionarioDto = {
+          nome: usuarioDto.nome,
+          cargo: 'comum',
+          id_usuario: retornoInsert?.insertId
+        }
+        const novoFuncionario = await this.funcionarioService.criarFuncionario(criarFuncionarioDto);
+      } else if (usuarioDto.tipo_usuario == 'comum'){
+        const criarClienteDto: CriarClienteDto = {
+          id_usuario: retornoInsert?.insertId
+        }
+      }
 
       if (retornoInsert?.insertId) {
         const novoUsuario = await this.usuarioRepositorio.buscarUsuarioPorId(retornoInsert?.insertId);
