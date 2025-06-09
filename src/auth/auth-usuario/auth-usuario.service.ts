@@ -42,7 +42,8 @@ export class AuthUsuarioService {
             payload = {
                 id: usuario.id_usuario,
                 nome: usuario.nome,
-                perfil: usuario.tipo_usuario
+                perfil: usuario.tipo_usuario,
+                cpf: usuario.cpf
             }
 
 
@@ -52,7 +53,7 @@ export class AuthUsuarioService {
                 const usuarioExisteEmFuncionarios = await this.authUsuarioRepositorio.usuarioExisteEmFuncionarios(usuario.id_usuario)
 
             
-                if (usuarioExisteEmFuncionarios.eFuncionario == 0) {
+                if (!usuarioExisteEmFuncionarios?.eFuncionario) {
                     return {
                         erro: true,
                         mensagem: `Esse usuário não possui conta de funcionário`,
@@ -65,8 +66,8 @@ export class AuthUsuarioService {
 
                 const usuarioExisteEmClientes = await this.authUsuarioRepositorio.usuarioExisteEmClientes(usuario.id_usuario)
 
-
-                if (usuarioExisteEmClientes.eCliente == 0) {
+                // console.log(usuarioExisteEmClientes)
+                if (!usuarioExisteEmClientes?.eCliente) {
                     return {
                         erro: true,
                         mensagem: `Esse usuário não possui conta de cliente`,

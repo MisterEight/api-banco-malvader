@@ -47,6 +47,35 @@ export class ContaPoupancaRepositorio {
             }
         }
     }
+
+    public async buscarTodasContaPoupancaPorCpf(id_usuario: string): Promise<any> {
+
+        const sql = `
+            SELECT cp.id_conta_poupanca
+            FROM contas_poupanca cp
+            LEFT OUTER JOIN conta ct
+                ON ct.id_conta = cp.id_conta
+            LEFT OUTER JOIN clientes cli 
+                ON ct.id_cliente = cli.id_cliente
+            LEFT OUTER JOIN usuarios us
+                ON us.id_usuario = cli.id_usuario
+            WHERE us.cpf = ?
+        `
+
+        try {
+
+            const [resultado]: any = await this.pool.query<ResultSetHeader>(sql, [id_usuario])
+            return resultado
+
+        } catch (erro: any) {
+            return {
+                erro: true,
+                mensagem: "Erro ao consultar conta poupança",
+                codigo: 500
+            }
+        }
+
+    }
 }
 
 

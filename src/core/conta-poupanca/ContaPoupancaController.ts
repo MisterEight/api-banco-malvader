@@ -17,4 +17,9 @@ export class ContaPoupancaController {
         const resposta = await this.contaPoupancaService.criarContaPoupanca(criarContaPoupancaDto);
         return resposta;
     }
+
+    public async buscarTodasContasPoupancaPorCpf(id_usuario: string){
+        const resposta = await this.contaPoupancaService.buscarTodasContaPoupancaPorCpf(id_usuario)
+        return resposta
+    }
 }

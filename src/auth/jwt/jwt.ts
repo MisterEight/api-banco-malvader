@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const JWT_SECRET: Secret = process.env.JWT_SECRET || 'lalalalalal';
-const EXPIRACAO_PADRAO: SignOptions['expiresIn'] = '1h';
+const EXPIRACAO_PADRAO: SignOptions['expiresIn'] = '10h';
 
 export function gerarToken(
   payload: object,
