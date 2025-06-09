@@ -48,4 +48,9 @@ export class ContaPoupancaService {
 
 
     }
+
+    public async buscarTodasContaPoupancaPorCpf(id_usuario: string){
+        const resposta = await this.contaPoupancaRepositorio.buscarTodasContaPoupancaPorCpf(id_usuario);
+        return resposta
+    }
 }

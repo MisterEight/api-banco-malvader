@@ -171,8 +171,8 @@ export class AuthUsuarioRepositorio {
                     WHERE us.id_usuario = ?;
                 `
                 const [resultado]: any = await this.pool.query(sql, [id_usuario]);
-
-                return resultado;
+              
+                return resultado[0];
 
             } catch(erro: any){
                 throw new Error("Erro ao consultar se usuario existe em clientes")
