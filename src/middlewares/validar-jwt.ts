@@ -145,3 +145,4 @@ export function rotaProtegidaParaCliente(req: Request, res: Response, next: Next
     }
   }
 }
+

@@ -41,12 +41,22 @@ export class UsuarioRepositorio {
   }
 
   public async buscarUsuarioPorCpf(params: BuscarUsuarioCpf): Promise<any> {
-    const sql = `
+    try {
+      const sql = `
       SELECT id_usuario, nome, cpf, telefone 
       FROM usuarios WHERE cpf = ?;
     `;
-    const [resultado]: any = await this.pool.query(sql, [params.cpf]);
-    return resultado[0];
+      const [resultado]: any = await this.pool.query(sql, [params.cpf]);
+
+      return resultado[0];
+    } catch (erro: any) {
+      return {
+        erro: true,
+        mensagem: "Erro ao buscar usuário",
+        codigo: 500
+      }
+    }
+
   }
 
   // Para uso interno
