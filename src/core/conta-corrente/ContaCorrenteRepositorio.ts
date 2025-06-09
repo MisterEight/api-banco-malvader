@@ -80,4 +80,29 @@ export class ContaCorrenteRepositorio {
         }
 
     }
+
+    public async buscarInformacoesDaContaCorrentePorId(id_conta_corrente: string): Promise<any> {
+        const sql = `
+            SELECT 
+	            ct.numero_conta,
+                ct.saldo,
+                cc.limite,
+                ag.codigo_agencia
+            FROM contas_corrente as cc
+            LEFT OUTER JOIN conta as ct
+                ON ct.id_conta = cc.id_conta
+            LEFT OUTER JOIN agencia as ag
+                ON ag.id_agencia = ct.id_agencia
+            WHERE cc.id_conta_corrente = ?
+                
+        `
+
+        try {
+            const [resultado]: any = await this.pool.query<ResultSetHeader>(sql, [id_conta_corrente]);
+
+            return resultado[0];
+        } catch(erro: any){
+
+        }
+    }
 }

@@ -22,4 +22,9 @@ export class ContaCorrenteController {
         const resposta = await this.contaCorrenteService.buscarTodasContaCorrentesPorCpf(id_usuario)
         return resposta
     }
+
+    public async buscarInformacoesDaContaCorrentePorId(id_conta_corrente: string){
+        const resposta = await this.contaCorrenteService.buscarInformacoesDaContaCorrentePorId(id_conta_corrente)
+        return resposta
+    }
 }
