@@ -28,7 +28,7 @@ router.post(
 
 router.get(
   '/:cpf',
- //autenticarJWTComOTP,
+ autenticarJWTComOTP,
   async (req, res, next) => {
     try {
       const resposta = await contaInvestimentoController.buscarTodasContasInvestimentoPorCpf(req.params.cpf);
