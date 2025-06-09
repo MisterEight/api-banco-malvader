@@ -3,7 +3,7 @@ import { ContaInvestimento } from "./ContaInvestimento";
 import { tratarCodigosDeErroSql } from "../../utils/tratamentoDeErrosSql";
 
 export class ContaInvestimentoRepositorio {
-    constructor(readonly pool: Pool){}
+    constructor(readonly pool: Pool) { }
 
     async criarContaInvestimento(contaInvestimento: ContaInvestimento): Promise<any> {
         const sql = `
@@ -31,9 +31,9 @@ export class ContaInvestimentoRepositorio {
             conexao.commit()
             conexao.release()
 
-            return {id_conta_investimento: contaInvestimento.getIdContaInvestimento()};
+            return { id_conta_investimento: contaInvestimento.getIdContaInvestimento() };
 
-        } catch (erro: any){
+        } catch (erro: any) {
             conexao.rollback()
             conexao.release()
 
@@ -48,7 +48,36 @@ export class ContaInvestimentoRepositorio {
             }
         }
 
-       
+
+    }
+
+    public async buscarTodasContaInvestimentoPorCpf(cpf: string): Promise<any> {
+
+        const sql = `
+            SELECT ci.id_conta_investimento
+            FROM contas_investimento ci
+            LEFT OUTER JOIN conta ct
+                ON ct.id_conta = ci.id_conta
+            LEFT OUTER JOIN clientes cli 
+                ON ct.id_cliente = cli.id_cliente
+            LEFT OUTER JOIN usuarios us
+                ON us.id_usuario = cli.id_usuario
+            WHERE us.cpf = ?
+        `
+
+        try {
+
+            const [resultado]: any = await this.pool.query<ResultSetHeader>(sql, [cpf])
+            return resultado
+
+        } catch (erro: any) {
+            return {
+                erro: true,
+                mensagem: "Erro ao consultar conta poupança",
+                codigo: 500
+            }
+        }
+
     }
 }
 

@@ -6,14 +6,19 @@ import { CriarContaInvestimentoDto } from "./dto/CriarContaInvestimento";
 
 export class ContaInvestimentoController {
     private contaInvestimentoService: ContaInvestimentoService;
-    constructor(){
+    constructor() {
         const contaInvestimentoRepositorio: ContaInvestimentoRepositorio = new ContaInvestimentoRepositorio(pool);
         const contaRepositorio: ContaRepositorio = new ContaRepositorio(pool)
         this.contaInvestimentoService = new ContaInvestimentoService(contaInvestimentoRepositorio, contaRepositorio)
     }
 
-    public async criarContaInvestimento(criarContaInvestimentoDto: CriarContaInvestimentoDto){
+    public async criarContaInvestimento(criarContaInvestimentoDto: CriarContaInvestimentoDto) {
         const resposta = await this.contaInvestimentoService.criarContaInvestimento(criarContaInvestimentoDto)
         return resposta;
+    }
+
+    public async buscarTodasContasInvestimentoPorCpf(cpf: string) {
+        const resposta = await this.contaInvestimentoService.buscarTodasContaInvestimentoPorCpf(cpf)
+        return resposta
     }
 }

@@ -26,4 +26,23 @@ router.post(
   }
 );
 
+router.get(
+  '/:cpf',
+ //autenticarJWTComOTP,
+  async (req, res, next) => {
+    try {
+      const resposta = await contaInvestimentoController.buscarTodasContasInvestimentoPorCpf(req.params.cpf);
+
+      if(resposta?.erro){
+        res.status(resposta.codigo ? resposta.codigo : 500).json({erro: resposta.erro, mensagem: resposta.mensagem})
+        return;
+      }
+
+      res.json(resposta);
+    } catch (err) {
+      next(err);
+    }
+  }
+)
+
 export default router;

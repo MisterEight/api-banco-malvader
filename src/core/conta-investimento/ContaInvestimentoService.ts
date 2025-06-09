@@ -49,4 +49,9 @@ export class ContaInvestimentoService {
 
 
     }
+
+    public async buscarTodasContaInvestimentoPorCpf(cpf: string) {
+        const resposta = await this.contaInvestimentoRepositorio.buscarTodasContaInvestimentoPorCpf(cpf);
+        return resposta
+    }
 }
