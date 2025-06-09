@@ -17,4 +17,9 @@ export class ContaCorrenteController {
         const resposta = await this.contaCorrenteService.criarContaCorrente(criarContaCorrente);
         return resposta;
     }
+
+    public async buscarTodasContasCorrentesPorCpf(id_usuario: string){
+        const resposta = await this.contaCorrenteService.buscarTodasContaCorrentesPorCpf(id_usuario)
+        return resposta
+    }
 }

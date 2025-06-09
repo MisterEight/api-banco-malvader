@@ -30,8 +30,6 @@ router.post(
 router.get(
   "/cpf/:cpf",
   autenticarJWTComOTP,
-  rotaProtegidaParaCliente,
-  rotaProtegidaParaFuncionario,
   validarParamsDto(BuscarUsuarioCpf),  
   async (req, res, next) => {
 	try {
@@ -40,8 +38,14 @@ router.get(
         cpf: req.params.cpf
       }
 
-     const usuario = await usuarioController.buscarUsuarioPorCpfController(params);
-    res.json(usuario)
+
+    const resposta = await usuarioController.buscarUsuarioPorCpfController(params);
+
+      if(resposta?.erro){
+        res.status(resposta.codigo ? resposta.codigo : 500).json({erro: resposta.erro, mensagem: resposta.mensagem})
+        return;
+      }
+    res.json(resposta)
 	} catch (err) {
 		next(err);
 	}

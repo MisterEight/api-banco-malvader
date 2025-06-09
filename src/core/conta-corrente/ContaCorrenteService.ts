@@ -53,4 +53,9 @@ export class ContaCorrenteService {
 
 
     }
+
+    public async buscarTodasContaCorrentesPorCpf(id_usuario: string){
+        const resposta = await this.contaCorrenteRepositorio.buscarTodasContaCorrentesPorCpf(id_usuario);
+        return resposta
+    }
 }
