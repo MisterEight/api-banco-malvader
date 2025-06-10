@@ -12,13 +12,25 @@ export class TransacaoService {
 
     public async inserirTransacao(criarTransacaoDto: CriarTransacaoDTO){
 
+       
+
         try {
+
+            const usuarioConta = await this.transacaoRepositorio.retornarIdContaDoIdOrigem(criarTransacaoDto?.id_conta_origem)
+
+            if(!usuarioConta?.id_conta){
+                return {
+                    erro: true,
+                    mensagem: "Conta de origem não encontrada",
+                    codigo: 404
+                }
+            }
 
             let contaOrigem: ContaBuscaPorId;
             let informacoesContaOrigem: InformacoesConta;
             try {
-                contaOrigem = await this.contaRepositorio.buscarContaPorId(criarTransacaoDto.id_conta_origem)
-                informacoesContaOrigem = await this.contaRepositorio.buscarInfomacoesDoUsuarioPelaConta(criarTransacaoDto.id_conta_origem);
+                contaOrigem = await this.contaRepositorio.buscarContaPorId(usuarioConta?.id_conta)
+                informacoesContaOrigem = await this.contaRepositorio.buscarInfomacoesDoUsuarioPelaConta(usuarioConta?.id_conta);
             } catch (erro) {
                 return {
                     erro: true,
@@ -80,7 +92,7 @@ export class TransacaoService {
             }
 
             const transacao = new Transacao(
-                criarTransacaoDto.id_conta_origem,
+                usuarioConta?.id_conta,
                 criarTransacaoDto.id_conta_destino,
                 criarTransacaoDto.tipo_transacao,
                 criarTransacaoDto.valor,

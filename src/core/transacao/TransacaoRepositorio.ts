@@ -87,5 +87,19 @@ export class TransacaoRepositorio {
             }
         }
     }
+
+    public async retornarIdContaDoIdOrigem(id_origem: string): Promise<any>{
+        const sql = `
+            SELECT id_conta FROM contas_corrente WHERE id_conta_corrente = ?
+            UNION 
+            SELECT id_conta FROM contas_poupanca WHERE id_conta_poupanca = ?
+            UNION 
+            SELECT id_conta FROM contas_investimento WHERE id_conta_investimento = ?
+            LIMIT 1;
+        `
+
+        const [resultado]: any = await this.pool.query<ResultSetHeader>(sql, [id_origem, id_origem, id_origem]);
+        return resultado[0]
+    }
 }
 
