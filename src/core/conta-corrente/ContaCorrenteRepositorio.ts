@@ -185,7 +185,35 @@ export class ContaCorrenteRepositorio {
         }
     }
 
-    // public async depositar(id_conta_corrente: string): Promise<any> {
+    public async depositar(id_conta_corrente: string, valor: number): Promise<any> {
+        const sql = `
+            UPDATE conta as ct
+            LEFT OUTER JOIN contas_corrente as cc
+                ON ct.id_conta = cc.id_conta
+            SET ct.saldo = saldo + ?
+            WHERE cc.id_conta_corrente = ?
+        `
 
-    // }
+        const conexao = await this.pool.getConnection()
+
+        try {
+            conexao.beginTransaction()
+
+            const [resultado]: any = await conexao.query<ResultSetHeader>(sql, [valor, id_conta_corrente])
+
+            conexao.commit();
+            conexao.release();
+
+            return {mensagem: `Deposito no valor de R$${valor} realizado com sucesso!`}
+
+        } catch(erro: any){
+            conexao.rollback();
+            conexao.release();
+            return {
+                erro: true,
+                mensagem: "Erro ao depositar saldo",
+                codigo: 500
+            }
+        }
+    }
 }

@@ -1,6 +1,6 @@
 import { IsUUID, IsNumber, IsDateString, IsPositive, IsOptional, IsNotEmpty } from 'class-validator';
 
-export class SacarSaldoDto {
+export class SaqueDepositoDto {
   @IsUUID()
   @IsNotEmpty()
   id_conta_corrente!: string;
