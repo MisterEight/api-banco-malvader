@@ -4,7 +4,7 @@ import { autenticarJWT, autenticarJWTComOTP, rotaProtegidaParaCliente, rotaProte
 import { validarDto } from "../../middlewares/validar-dto";
 import { ContaCorrenteController } from "./ContaCorrenteController";
 import { CriarContaCorrenteDto } from "./dto/CriarContaCorrenteDto";
-import { SacarSaldoDto } from "./dto/SacarSaldoDto";
+import { SaqueDepositoDto } from "./dto/SaqueDepositoDto";
 
 
 const router = Router();
@@ -31,10 +31,29 @@ router.post(
 
 router.post(
   '/sacar',
-  validarDto(SacarSaldoDto),
+  validarDto(SaqueDepositoDto),
   async (req, res, next) => {
     try {
       const resposta = await contaCorrenteController.sacarSaldo(req.body);
+
+      if(resposta?.erro){
+        res.status(resposta.codigo ? resposta.codigo : 500).json({erro: resposta.erro, mensagem: resposta.mensagem})
+        return;
+      }
+
+      res.json(resposta);
+    } catch (err) {
+      next(err);
+    }
+  }
+)
+
+router.post(
+  '/depositar',
+  validarDto(SaqueDepositoDto),
+  async (req, res, next) => {
+    try {
+      const resposta = await contaCorrenteController.depositar(req.body);
 
       if(resposta?.erro){
         res.status(resposta.codigo ? resposta.codigo : 500).json({erro: resposta.erro, mensagem: resposta.mensagem})

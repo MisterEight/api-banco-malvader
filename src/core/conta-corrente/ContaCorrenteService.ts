@@ -2,7 +2,7 @@ import { ContaRepositorio } from "../conta/ContaRepositorio";
 import { ContaCorrente } from "./ContaCorrente";
 import { ContaCorrenteRepositorio } from "./ContaCorrenteRepositorio";
 import { CriarContaCorrenteDto } from "./dto/CriarContaCorrenteDto";
-import { SacarSaldoDto } from "./dto/SacarSaldoDto";
+import { SaqueDepositoDto } from "./dto/SaqueDepositoDto";
 
 export class ContaCorrenteService {
     constructor(
@@ -65,7 +65,7 @@ export class ContaCorrenteService {
         return resposta;
     }
 
-    public async sacarSaldo(sacarSaldoDto: SacarSaldoDto) {
+    public async sacarSaldo(sacarSaldoDto: SaqueDepositoDto) {
 
         const contaCorrenteExiste = await this.contaCorrenteRepositorio.contaExiste(sacarSaldoDto.id_conta_corrente)
         const consultarSaldo = await this.contaCorrenteRepositorio.consultarSaldo(sacarSaldoDto.id_conta_corrente);
@@ -97,6 +97,11 @@ export class ContaCorrenteService {
         }
 
         const resposta = await this.contaCorrenteRepositorio.sacarSaldo(sacarSaldoDto.id_conta_corrente, sacarSaldoDto.valor);
+        return resposta;
+    }
+
+    public async depositar(saqueDepositoDto: SaqueDepositoDto) {
+        const resposta = await this.contaCorrenteRepositorio.depositar(saqueDepositoDto.id_conta_corrente, saqueDepositoDto.valor)
         return resposta;
     }
 }

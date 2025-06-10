@@ -3,7 +3,7 @@ import { ContaRepositorio } from "../conta/ContaRepositorio";
 import { ContaCorrenteRepositorio } from "./ContaCorrenteRepositorio";
 import { ContaCorrenteService } from "./ContaCorrenteService";
 import { CriarContaCorrenteDto } from "./dto/CriarContaCorrenteDto";
-import { SacarSaldoDto } from "./dto/SacarSaldoDto";
+import { SaqueDepositoDto } from "./dto/SaqueDepositoDto";
 
 export class ContaCorrenteController {
     private contaCorrenteService: ContaCorrenteService;
@@ -29,8 +29,13 @@ export class ContaCorrenteController {
         return resposta
     }
 
-    public async sacarSaldo(sacarSaldoDto: SacarSaldoDto){
+    public async sacarSaldo(sacarSaldoDto: SaqueDepositoDto){
         const resposta = await this.contaCorrenteService.sacarSaldo(sacarSaldoDto);
+        return resposta;
+    }
+
+    public async depositar(depositoDto: SaqueDepositoDto) {
+        const resposta = await this.contaCorrenteService.depositar(depositoDto);
         return resposta;
     }
 }
