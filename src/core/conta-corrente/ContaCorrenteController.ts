@@ -2,7 +2,8 @@ import { pool } from "../../config/database";
 import { ContaRepositorio } from "../conta/ContaRepositorio";
 import { ContaCorrenteRepositorio } from "./ContaCorrenteRepositorio";
 import { ContaCorrenteService } from "./ContaCorrenteService";
-import { CriarContaCorrenteDto } from "./dto/CriarContaCorrente";
+import { CriarContaCorrenteDto } from "./dto/CriarContaCorrenteDto";
+import { SacarSaldoDto } from "./dto/SacarSaldoDto";
 
 export class ContaCorrenteController {
     private contaCorrenteService: ContaCorrenteService;
@@ -26,5 +27,10 @@ export class ContaCorrenteController {
     public async buscarInformacoesDaContaCorrentePorId(id_conta_corrente: string){
         const resposta = await this.contaCorrenteService.buscarInformacoesDaContaCorrentePorId(id_conta_corrente)
         return resposta
+    }
+
+    public async sacarSaldo(sacarSaldoDto: SacarSaldoDto){
+        const resposta = await this.contaCorrenteService.sacarSaldo(sacarSaldoDto);
+        return resposta;
     }
 }
