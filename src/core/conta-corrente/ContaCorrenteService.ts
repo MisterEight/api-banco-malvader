@@ -1,7 +1,8 @@
 import { ContaRepositorio } from "../conta/ContaRepositorio";
 import { ContaCorrente } from "./ContaCorrente";
 import { ContaCorrenteRepositorio } from "./ContaCorrenteRepositorio";
-import { CriarContaCorrenteDto } from "./dto/CriarContaCorrente";
+import { CriarContaCorrenteDto } from "./dto/CriarContaCorrenteDto";
+import { SacarSaldoDto } from "./dto/SacarSaldoDto";
 
 export class ContaCorrenteService {
     constructor(
@@ -56,11 +57,46 @@ export class ContaCorrenteService {
 
     public async buscarTodasContaCorrentesPorCpf(id_usuario: string){
         const resposta = await this.contaCorrenteRepositorio.buscarTodasContaCorrentesPorCpf(id_usuario);
-        return resposta
+        return resposta;
     }
 
     public async buscarInformacoesDaContaCorrentePorId(id_conta_corrente: string){
         const resposta = await this.contaCorrenteRepositorio.buscarInformacoesDaContaCorrentePorId(id_conta_corrente);
-        return resposta
+        return resposta;
+    }
+
+    public async sacarSaldo(sacarSaldoDto: SacarSaldoDto) {
+
+        const contaCorrenteExiste = await this.contaCorrenteRepositorio.contaExiste(sacarSaldoDto.id_conta_corrente)
+        const consultarSaldo = await this.contaCorrenteRepositorio.consultarSaldo(sacarSaldoDto.id_conta_corrente);
+
+        try {
+            if(parseFloat(consultarSaldo?.saldo) < sacarSaldoDto.valor){
+                return {
+                    erro: true,
+                    mensagem: "Saldo insuficiente",
+                    codigo: 403
+                }
+            }
+        } catch (erro: any){
+            return {
+                erro: true,
+                mensagem: "Erro ao validar saldo",
+                codigo: 500
+            }
+        }
+
+        
+
+        if(!contaCorrenteExiste?.existe){
+            return {
+                erro: true,
+                mensagem: `Conta corrente de id ${sacarSaldoDto.id_conta_corrente} não existe`,
+                codigo: 404
+            }
+        }
+
+        const resposta = await this.contaCorrenteRepositorio.sacarSaldo(sacarSaldoDto.id_conta_corrente, sacarSaldoDto.valor);
+        return resposta;
     }
 }

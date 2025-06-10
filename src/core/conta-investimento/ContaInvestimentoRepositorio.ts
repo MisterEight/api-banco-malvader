@@ -71,6 +71,12 @@ export class ContaInvestimentoRepositorio {
             return resultado
 
         } catch (erro: any) {
+            
+            const erroTratado = tratarCodigosDeErroSql(erro);
+            if (erroTratado !== false) {
+                return erroTratado;
+            }
+
             return {
                 erro: true,
                 mensagem: "Erro ao consultar conta poupança",
