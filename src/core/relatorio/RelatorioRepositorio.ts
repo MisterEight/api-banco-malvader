@@ -49,4 +49,30 @@ export class RelatorioRepositorio {
             };
         }
     }
+
+    public async listarTransacoesPorPeriodo(inicio: string, fim: string): Promise<any> {
+        const sql = `
+            SELECT id_transacao, id_conta_origem, id_conta_destino, tipo_transacao,
+                   valor, data_hora, descricao
+            FROM transacoes
+            WHERE data_hora BETWEEN ? AND ?
+            ORDER BY data_hora
+        `;
+
+        try {
+            const [resultado]: any = await this.pool.query<ResultSetHeader>(sql, [inicio, fim]);
+            return resultado;
+        } catch (erro: any) {
+            const erroTratado = tratarCodigosDeErroSql(erro);
+            if (erroTratado !== false) {
+                return erroTratado;
+            }
+
+            return {
+                erro: true,
+                mensagem: 'Erro ao listar transacoes',
+                codigo: 500,
+            };
+        }
+    }
 }

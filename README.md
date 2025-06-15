@@ -15,6 +15,7 @@ Sistema bancário completo com funcionalidades para gerenciamento de contas, aut
 - Auditoria de ações no sistema.
 - Solicitação de empréstimos com integração via API externa para avaliação por ML.
 - Registro e acompanhamento de empréstimos aprovados.
+- Geração de relatórios financeiros com exportação para Excel e PDF.
 
 ## Tecnologias
 

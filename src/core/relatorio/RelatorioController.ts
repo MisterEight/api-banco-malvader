@@ -15,4 +15,9 @@ export class RelatorioController {
         const resposta = await this.relatorioService.criarRelatorio(dto);
         return resposta;
     }
+
+    public async exportarRelatorioFinanceiro(inicio: string, fim: string, formato: string) {
+        const resposta = await this.relatorioService.exportarRelatorioFinanceiro(inicio, fim, formato);
+        return resposta;
+    }
 }
