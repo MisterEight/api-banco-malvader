@@ -55,7 +55,10 @@ export class ContaCorrenteRepositorio {
     public async buscarTodasContaCorrentesPorCpf(id_usuario: string): Promise<any> {
 
         const sql = `
-            SELECT cc.id_conta_corrente
+            SELECT 
+                cc.id_conta_corrente,
+                us.nome,
+                us.cpf
             FROM contas_corrente cc
             LEFT OUTER JOIN conta ct
                 ON ct.id_conta = cc.id_conta
@@ -69,7 +72,7 @@ export class ContaCorrenteRepositorio {
         try {
 
             const [resultado]: any = await this.pool.query<ResultSetHeader>(sql, [id_usuario])
-            return resultado
+            return resultado[0]
 
         } catch (erro: any) {
             return {
@@ -80,6 +83,8 @@ export class ContaCorrenteRepositorio {
         }
 
     }
+
+    
 
     public async buscarInformacoesDaContaCorrentePorId(id_conta_corrente: string): Promise<any> {
         const sql = `

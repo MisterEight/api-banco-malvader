@@ -16,9 +16,9 @@ export class TransacaoService {
 
         try {
 
-            const usuarioConta = await this.transacaoRepositorio.retornarIdContaDoIdOrigem(criarTransacaoDto?.id_conta_origem)
+            const usuarioContaOrigem = await this.transacaoRepositorio.retornarIdContaDoIdOrigem(criarTransacaoDto?.id_conta_origem)
 
-            if(!usuarioConta?.id_conta){
+            if(!usuarioContaOrigem?.id_conta){
                 return {
                     erro: true,
                     mensagem: "Conta de origem não encontrada",
@@ -26,11 +26,21 @@ export class TransacaoService {
                 }
             }
 
+            const usuarioContaDestino = await this.transacaoRepositorio.retornarIdContaDoIdOrigem(criarTransacaoDto?.id_conta_destino)
+
+            if(!usuarioContaDestino?.id_conta){
+                return {
+                    erro: true,
+                    mensagem: "Conta de destino não encontrada",
+                    codigo: 404
+                }
+            }
+
             let contaOrigem: ContaBuscaPorId;
             let informacoesContaOrigem: InformacoesConta;
             try {
-                contaOrigem = await this.contaRepositorio.buscarContaPorId(usuarioConta?.id_conta)
-                informacoesContaOrigem = await this.contaRepositorio.buscarInfomacoesDoUsuarioPelaConta(usuarioConta?.id_conta);
+                contaOrigem = await this.contaRepositorio.buscarContaPorId(usuarioContaOrigem?.id_conta)
+                informacoesContaOrigem = await this.contaRepositorio.buscarInfomacoesDoUsuarioPelaConta(usuarioContaOrigem?.id_conta);
             } catch (erro) {
                 return {
                     erro: true,
@@ -42,8 +52,8 @@ export class TransacaoService {
             let contaDestino: ContaBuscaPorId;
             let informacoesContaDestino;
             try {
-                contaDestino = await this.contaRepositorio.buscarContaPorId(criarTransacaoDto.id_conta_destino)
-                informacoesContaDestino = await this.contaRepositorio.buscarInfomacoesDoUsuarioPelaConta(criarTransacaoDto.id_conta_destino);
+                contaDestino = await this.contaRepositorio.buscarContaPorId(usuarioContaDestino?.id_conta)
+                informacoesContaDestino = await this.contaRepositorio.buscarInfomacoesDoUsuarioPelaConta(usuarioContaDestino?.id_conta);
             } catch (erro) {
                 return {
                     erro: true,
@@ -92,8 +102,8 @@ export class TransacaoService {
             }
 
             const transacao = new Transacao(
-                usuarioConta?.id_conta,
-                criarTransacaoDto.id_conta_destino,
+                usuarioContaOrigem?.id_conta,
+                usuarioContaDestino?.id_conta,
                 criarTransacaoDto.tipo_transacao,
                 criarTransacaoDto.valor,
                 criarTransacaoDto.data_hora,
@@ -110,7 +120,7 @@ export class TransacaoService {
                 }
             }
 
-            return {resultado: `${criarTransacaoDto.tipo_transacao} no valor de R$ ${criarTransacaoDto.valor} realizada com sucesso de ${informacoesContaOrigem.nome} para ${informacoesContaDestino.nome}`}
+            return {mensagem: `${criarTransacaoDto.tipo_transacao} no valor de R$ ${criarTransacaoDto.valor} realizada com sucesso de ${informacoesContaOrigem.nome} para ${informacoesContaDestino.nome}`}
         } catch(erro: any){
             console.log(erro)
             return {
