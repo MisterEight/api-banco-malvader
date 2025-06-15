@@ -54,6 +54,9 @@ app.use('/transacao', transacaoRoutes)
 import emprestimoRoutes from './core/emprestimo/emprestimo.routes'
 app.use('/emprestimo', emprestimoRoutes)
 
+import auditoriaRoutes from './core/auditoria/auditoria.routes'
+app.use('/auditoria', auditoriaRoutes)
+
 inicializarBanco().then(()=> {
     app.listen(PORT, IP,  ()=> {
         console.log(`😎 API está rodando no endereço: http://${IP}:${PORT}`);
