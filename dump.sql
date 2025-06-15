@@ -398,6 +398,34 @@ INSERT INTO `transacoes` VALUES ('0b5ec2f6-9678-464c-b9b2-021ceb11c6f0','760a443
 UNLOCK TABLES;
 
 --
+-- Table structure for table `relatorios`
+--
+
+DROP TABLE IF EXISTS `relatorios`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `relatorios` (
+  `id_relatorio` char(36) NOT NULL,
+  `id_funcionario` char(36) NOT NULL,
+  `tipo_relatorio` varchar(255) NOT NULL,
+  `data_geracao` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `conteudo` text NOT NULL,
+  PRIMARY KEY (`id_relatorio`),
+  KEY `fk_relatorio_funcionario` (`id_funcionario`),
+  CONSTRAINT `fk_relatorio_funcionario` FOREIGN KEY (`id_funcionario`) REFERENCES `funcionarios` (`id_funcionario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `relatorios`
+--
+
+LOCK TABLES `relatorios` WRITE;
+/*!40000 ALTER TABLE `relatorios` DISABLE KEYS */;
+/*!40000 ALTER TABLE `relatorios` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `usuarios`
 --
 

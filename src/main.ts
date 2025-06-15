@@ -54,6 +54,9 @@ app.use('/transacao', transacaoRoutes)
 import emprestimoRoutes from './core/emprestimo/emprestimo.routes'
 app.use('/emprestimo', emprestimoRoutes)
 
+import relatorioRoutes from './core/relatorio/relatorio.routes'
+app.use('/relatorio', relatorioRoutes)
+
 import auditoriaRoutes from './core/auditoria/auditoria.routes'
 app.use('/auditoria', auditoriaRoutes)
 
