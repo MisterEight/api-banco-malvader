@@ -57,7 +57,15 @@ export class ContaCorrenteService {
 
     public async buscarTodasContaCorrentesPorCpf(id_usuario: string){
         const resposta = await this.contaCorrenteRepositorio.buscarTodasContaCorrentesPorCpf(id_usuario);
+        if(!resposta || resposta.length === 0) {
+            return {
+                erro: true,
+                mensagem: "Nenhuma conta corrente encontrada para esse CPF",
+                codigo: 404
+            }
+        }
         return resposta;
+
     }
 
     public async buscarInformacoesDaContaCorrentePorId(id_conta_corrente: string){
