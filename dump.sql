@@ -431,6 +431,29 @@ LOCK TABLES `usuarios` WRITE;
 INSERT INTO `usuarios` VALUES ('3d0bbce2-6ac1-4f5f-b832-0c702de6efa2','João Pop','12345678976','1990-05-10','comum','(11)91234-5678','$2b$10$yE4Df7Jtx.0CgPXsyVa0K.6NTq8zhkZCbwlDDlu5Rwm6Vn1OQDwc2',1,'2025-06-09 02:08:31','472522',1,'09testfree@gmail.com'),('5054c7e4-936f-4055-a794-5074a9786507','Nazaré','56295715320','1990-05-10','administrador','(11)91234-5678','$2b$10$hZrWcpHU/4s99q.MEixZ5uXT.g70L7vDDCwYhKWYqzybBSuUM.VUe',0,'2025-06-08 19:57:56',NULL,0,'anazare799@gmail.com'),('63f23d09-d7ed-454e-b777-c4575efb911b','João Silva','12345678938','1990-05-10','administrador','(11)91234-5678','$2b$10$eu3uwaLd4wS9niFvrLNXs.YDjQ4I.YOsdy9MOUw8s7SDjdbuac0gq',1,'2025-05-28 17:21:20',NULL,0,''),('c5f83e16-88ff-4d82-a60f-995d63d4b6f4','Testeco','55555555555','1990-05-10','comum','(11)91234-5678','$2b$10$6HtJGcVnAbOPuXzY39fNeuKBG1ESxTO5D1F3N3H3asG2tIpuzWcXO',0,'2025-06-08 22:05:37','964247',0,'viniciusalmeida.lacerda123@gmail.com'),('e3655c61-7ee8-4a5e-80bc-e5b4360bd8eb','Gustavo','12345678910','1990-05-10','administrador','(11)91234-5678','$2b$10$dHWbdifT5GRPWO2dNTfks.215z8zuU3Ke0PAogjrbOwW6YOvJnvtO',1,'2025-05-29 00:23:27',NULL,0,''),('edbe263e-fe66-46d4-9a87-125741b49cd2','João Silva','12345678933','1990-05-10','administrador','(11)91234-5678','$2b$10$/jJ4svKdujJ/sfrCf8aLgu9CwjacgINHoBZpWO4obgda1MiWN/aE6',1,'2025-05-28 21:23:37','663612',0,'');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
+-- Table structure for table `auditoria`
+
+DROP TABLE IF EXISTS `auditoria`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `auditoria` (
+  `id_auditoria` char(36) NOT NULL,
+  `id_usuario` char(36) NOT NULL,
+  `acao` varchar(255) NOT NULL,
+  `data_hora` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `detalhes` text,
+  PRIMARY KEY (`id_auditoria`),
+  KEY `fk_auditoria_usuario` (`id_usuario`),
+  CONSTRAINT `fk_auditoria_usuario` FOREIGN KEY (`id_usuario`) REFERENCES `usuarios` (`id_usuario`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+-- Dumping data for table `auditoria`
+
+LOCK TABLES `auditoria` WRITE;
+/*!40000 ALTER TABLE `auditoria` DISABLE KEYS */;
+/*!40000 ALTER TABLE `auditoria` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
