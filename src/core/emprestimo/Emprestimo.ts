@@ -9,12 +9,16 @@ export class Emprestimo {
     private valor_total_devido: number;
     private data_solicitacao: string;
     private data_resposta: string | null;
+    private status: string;
+    private score_risco: number;
 
     constructor(
         id_conta: string,
         valor_solicitado: number,
         taxa_juros_mensal: number,
-        prazo_meses: number
+        prazo_meses: number,
+        status: string = 'PENDENTE',
+        score_risco: number = 0
     ) {
         this.id_emprestimo = uuidv4();
         this.id_conta = id_conta;
@@ -24,6 +28,8 @@ export class Emprestimo {
         this.valor_total_devido = valor_solicitado + (((taxa_juros_mensal / 100) * valor_solicitado )* prazo_meses);
         this.data_solicitacao = new Date().toISOString().slice(0, 19).replace('T', ' ');
         this.data_resposta = null;
+        this.status = status;
+        this.score_risco = score_risco;
     }
 
     public getIdEmprestimo(): string {
@@ -56,5 +62,21 @@ export class Emprestimo {
 
     public getDataResposta(): string | null {
         return this.data_resposta;
+    }
+
+    public getStatus(): string {
+        return this.status;
+    }
+
+    public setStatus(novoStatus: string) {
+        this.status = novoStatus;
+    }
+
+    public getScoreRisco(): number {
+        return this.score_risco;
+    }
+
+    public setScoreRisco(score: number) {
+        this.score_risco = score;
     }
 }

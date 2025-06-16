@@ -43,6 +43,8 @@ DB_USER=root
 # Configurações API
 API_PORT=3000
 API_IP=localhost
+# URL da API de Machine Learning
+ML_API_URL=http://localhost:5000
 
 
 2. Instalar dependências:
