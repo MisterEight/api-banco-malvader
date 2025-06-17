@@ -37,4 +37,54 @@ export class ContaService {
         }
 
     }
+
+    public async atualizarConta(contaDto: CriarContaDTO & { id_conta: string }) {
+        try {
+            const conta = new Conta(
+                contaDto.id_agencia,
+                contaDto.saldo,
+                contaDto.id_cliente,
+                contaDto.data_abertura,
+                contaDto.status,
+                contaDto.tipo_conta
+            );
+
+            // Força o id original
+            (conta as any).id_conta = contaDto.id_conta;
+            const resposta = await this.contaRepositorio.atualizarConta(conta);
+            return resposta;
+        } catch (erro) {
+            return {
+                erro: true,
+                mensagem: 'Erro inesperado ao atualizar conta',
+                codigo: 500
+            }
+        }
+    }
+
+    public async deletarConta(id_conta: string) {
+        try {
+            const resposta = await this.contaRepositorio.deletarConta(id_conta);
+            return resposta;
+        } catch (erro) {
+            return {
+                erro: true,
+                mensagem: 'Erro inesperado ao deletar conta',
+                codigo: 500
+            }
+        }
+    }
+
+    public async buscarContaPorId(id_conta: string) {
+        try {
+            const resposta = await this.contaRepositorio.buscarContaPorId(id_conta);
+            return resposta;
+        } catch (erro) {
+            return {
+                erro: true,
+                mensagem: 'Erro ao buscar conta',
+                codigo: 500
+            }
+        }
+    }
 }

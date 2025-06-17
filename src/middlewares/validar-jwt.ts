@@ -105,13 +105,18 @@ export function rotaProtegidaParaFuncionario(req: Request, res: Response, next: 
       }
 
       if(!payload.eFuncionario){
-        res.status(401).json({ 
+        res.status(401).json({
           erro: true,
           mensagem: 'Permissão negada, rota protegida para funcionários'
-        })
+        });
+        return;
       }
-    } catch (erro) {
 
+      req.user = payload;
+      next();
+    } catch (erro) {
+      res.status(403).json({ mensagem: 'Token inválido ou expirado' });
+      return;
     }
   }
 }
@@ -135,13 +140,18 @@ export function rotaProtegidaParaCliente(req: Request, res: Response, next: Next
       }
 
       if(!payload.eCliente){
-        res.status(401).json({ 
+        res.status(401).json({
           erro: true,
           mensagem: 'Permissão negada, rota protegida para clientes'
-        })
+        });
+        return;
       }
-    } catch (erro) {
 
+      req.user = payload;
+      next();
+    } catch (erro) {
+      res.status(403).json({ mensagem: 'Token inválido ou expirado' });
+      return;
     }
   }
 }
