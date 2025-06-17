@@ -16,8 +16,10 @@ export class EmprestimoRepositorio {
                 prazo_meses,
                 valor_total_devido,
                 data_solicitacao,
-                data_resposta
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                data_resposta,
+                status,
+                score_risco
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `
         const conexao = await this.pool.getConnection()
 
@@ -32,7 +34,9 @@ export class EmprestimoRepositorio {
                 emprestimo.getPrazoMeses(),
                 emprestimo.getValorTotalDevido(),
                 emprestimo.getDataSolicitacao(),
-                emprestimo.getDataResposta()
+                emprestimo.getDataResposta(),
+                emprestimo.getStatus(),
+                emprestimo.getScoreRisco()
             ])
 
 
