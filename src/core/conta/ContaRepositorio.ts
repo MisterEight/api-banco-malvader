@@ -110,7 +110,7 @@ export class ContaRepositorio {
     // Vamos fazer valer a regra que só pode 1 ccnta por tipo de conta para cada cliente
     public async tipoDeContaJaExiste(id_cliente: string, tipo_conta: TipoConta) {
         const sql = `
-            SELECT 
+            SELECT
                 COUNT(id_conta) as existe
             FROM conta
             WHERE id_cliente = ? AND tipo_conta = ?
@@ -122,5 +122,59 @@ export class ContaRepositorio {
             throw new Error(`Erro ao quantidade de tipos de conta`)
         }
 
+    }
+
+    public async atualizarConta(conta: Conta): Promise<any> {
+        const sql = `
+            UPDATE conta SET
+                id_agencia = ?,
+                id_cliente = ?,
+                saldo = ?,
+                data_abertura = ?,
+                status = ?,
+                tipo_conta = ?
+            WHERE id_conta = ?
+        `;
+
+        try {
+            const [resposta]: any = await this.pool.query<ResultSetHeader>(sql, [
+                conta.getIdAgencia(),
+                conta.getIdCliente(),
+                conta.getSaldo(),
+                conta.getDataAbertura(),
+                conta.getStatus(),
+                conta.getTipoConta(),
+                conta.getIdConta()
+            ]);
+            return { afetados: resposta.affectedRows };
+        } catch (erro: any) {
+            const erroTratado = tratarCodigosDeErroSql(erro);
+            if (erroTratado !== false) {
+                return erroTratado;
+            }
+            return {
+                erro: true,
+                mensagem: 'Erro ao atualizar conta',
+                codigo: 500
+            }
+        }
+    }
+
+    public async deletarConta(id_conta: string): Promise<any> {
+        const sql = `DELETE FROM conta WHERE id_conta = ?`;
+        try {
+            const [resposta]: any = await this.pool.query<ResultSetHeader>(sql, [id_conta]);
+            return { afetados: resposta.affectedRows };
+        } catch (erro: any) {
+            const erroTratado = tratarCodigosDeErroSql(erro);
+            if (erroTratado !== false) {
+                return erroTratado;
+            }
+            return {
+                erro: true,
+                mensagem: 'Erro ao deletar conta',
+                codigo: 500
+            }
+        }
     }
 }
